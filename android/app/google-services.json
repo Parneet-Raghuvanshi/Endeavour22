@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "441673372330",
+    "firebase_url": "https://endvr22-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "endvr22",
+    "storage_bucket": "endvr22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441673372330:android:0cfcd192e4e69ff9d676d3",
+        "android_client_info": {
+          "package_name": "com.example.endeavour22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441673372330-00j4stg0f3vq5q4eug3deqdgl7jhskbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5t5KYyGWzl9mHE6OsRdWlyttnvhmXtnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441673372330-00j4stg0f3vq5q4eug3deqdgl7jhskbt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
