@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:endeavour22/models/speaker_tile.dart';
+import 'package:endeavour22/speakers/speaker_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:firebase_database/firebase_database.dart';

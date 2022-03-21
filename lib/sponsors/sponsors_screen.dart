@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:endeavour22/models/sponsor_tile.dart';
-import 'package:endeavour22/providers/sponsors_provider.dart';
+import 'package:endeavour22/sponsors/sponsor_tile.dart';
+import 'package:endeavour22/sponsors/sponsors_provider.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';

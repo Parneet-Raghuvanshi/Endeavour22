@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSnackbar {
   void showFloatingFlushBar({
@@ -10,7 +11,7 @@ class CustomSnackbar {
   }) {
     Flushbar(
       duration: const Duration(seconds: 3),
-      margin: const EdgeInsets.all(5),
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       flushbarPosition: FlushbarPosition.TOP,
       borderRadius: const BorderRadius.all(Radius.circular(8)),
       backgroundColor: color,

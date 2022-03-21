@@ -1,16 +1,18 @@
-import 'package:endeavour22/data/drawer_items.dart';
-import 'package:endeavour22/models/drawer_item.dart';
-import 'package:endeavour22/screens/about_us_screen.dart';
-import 'package:endeavour22/screens/event_screen.dart';
-import 'package:endeavour22/screens/home_screen.dart';
-import 'package:endeavour22/screens/schedule_screen.dart';
-import 'package:endeavour22/screens/speakers_screen.dart';
-import 'package:endeavour22/screens/sponsors_screen.dart';
-import 'package:endeavour22/screens/team_screen.dart';
+import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/helper/drawer_items.dart';
+import 'package:endeavour22/drawermain/drawer_item.dart';
+import 'package:endeavour22/team/about_us_screen.dart';
+import 'package:endeavour22/events/event_screen.dart';
+import 'package:endeavour22/drawermain/home_screen.dart';
+import 'package:endeavour22/schedule/schedule_screen.dart';
+import 'package:endeavour22/speakers/speakers_screen.dart';
+import 'package:endeavour22/sponsors/sponsors_screen.dart';
+import 'package:endeavour22/team/team_screen.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:endeavour22/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -67,9 +69,10 @@ class _MainScreenState extends State<MainScreen> {
             onSelectedItem: (item) {
               switch (item) {
                 case DrawerItems.logout:
+                  Provider.of<Auth>(context, listen: false).logout();
                   CustomSnackbar().showFloatingFlushBar(
                     context: context,
-                    message: 'Logout Success!',
+                    message: 'Logout Successfully!',
                     color: Colors.black,
                   );
                   return;

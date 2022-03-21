@@ -1,4 +1,4 @@
-import 'package:endeavour22/models/schedule_tile.dart';
+import 'package:endeavour22/schedule/schedule_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';

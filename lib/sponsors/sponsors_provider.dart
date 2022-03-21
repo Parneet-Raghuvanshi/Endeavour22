@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:endeavour22/models/sponsor_tile.dart';
+import 'package:endeavour22/sponsors/sponsor_tile.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 

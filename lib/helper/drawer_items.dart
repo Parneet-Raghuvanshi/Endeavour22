@@ -1,5 +1,4 @@
-import 'package:endeavour22/models/drawer_item.dart';
-import 'package:flutter/material.dart';
+import 'package:endeavour22/drawermain/drawer_item.dart';
 
 class DrawerItems {
   static const home = DrawerItem(title: 'Home', icon: 'assets/images/home.png');

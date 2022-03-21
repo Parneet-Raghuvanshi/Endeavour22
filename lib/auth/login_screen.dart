@@ -1,5 +1,10 @@
+import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/helper/http_exception.dart';
+import 'package:endeavour22/widgets/custom_loader.dart';
+import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback callback;
@@ -10,6 +15,56 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  Future<void> _submit() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final _email = _emailController.text.trim();
+    final _password = _passwordController.text.trim();
+
+    if (_email.isEmpty) {
+      CustomSnackbar().showFloatingFlushBar(
+        context: context,
+        message: 'Email field is empty!',
+        color: Colors.red,
+      );
+      return;
+    } else if (_password.isEmpty) {
+      CustomSnackbar().showFloatingFlushBar(
+        context: context,
+        message: 'Password field is empty!',
+        color: Colors.red,
+      );
+      return;
+    }
+    // now login here
+    try {
+      await Provider.of<Auth>(context, listen: false).login(_email, _password);
+    } on HttpException catch (error) {
+      CustomSnackbar().showFloatingFlushBar(
+        context: context,
+        message: error.toString(),
+        color: Colors.red,
+      );
+    } catch (error) {
+      String errorMessage = 'Could not authenticate, please try again!';
+      CustomSnackbar().showFloatingFlushBar(
+        context: context,
+        message: errorMessage,
+        color: Colors.red,
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
@@ -41,6 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 312.w,
               height: 48.h,
               child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
+                autofocus: false,
                 textAlignVertical: TextAlignVertical.center,
                 cursorColor: Colors.black,
                 style: TextStyle(
@@ -71,6 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 312.w,
               height: 48.h,
               child: TextField(
+                keyboardType: TextInputType.visiblePassword,
+                controller: _passwordController,
+                autofocus: false,
                 textAlignVertical: TextAlignVertical.center,
                 cursorColor: Colors.black,
                 style: TextStyle(
@@ -102,31 +163,41 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 40.h),
             Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12, //New
-                      blurRadius: 10.0,
-                      offset: Offset(0.5, 0.5),
+              child: _isLoading
+                  ? SizedBox(
+                      height: 48.h,
+                      child: Center(
+                        child: CustomLoader().buildLoader(),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: _submit,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12, //New
+                              blurRadius: 10.0,
+                              offset: Offset(0.5, 0.5),
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        width: 196.w,
+                        height: 48.h,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                width: 196.w,
-                height: 48.h,
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
             ),
             SizedBox(height: 16.h),
             Center(

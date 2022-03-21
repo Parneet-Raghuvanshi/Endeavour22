@@ -1,5 +1,5 @@
-import 'package:endeavour22/screens/login_screen.dart';
-import 'package:endeavour22/screens/register_screen.dart';
+import 'package:endeavour22/auth/login_screen.dart';
+import 'package:endeavour22/auth/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +18,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    closeLogin();
+    openLogin();
   }
 
   void closeLogin() => setState(() {
