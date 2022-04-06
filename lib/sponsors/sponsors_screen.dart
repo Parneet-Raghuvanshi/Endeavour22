@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/sponsors/sponsor_tile.dart';
 import 'package:endeavour22/sponsors/sponsors_provider.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
@@ -10,21 +11,17 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SponsorsScreen extends StatefulWidget {
+class SponsorsScreen extends StatelessWidget {
   final VoidCallback openDrawer;
   const SponsorsScreen({Key? key, required this.openDrawer}) : super(key: key);
 
   @override
-  State<SponsorsScreen> createState() => _SponsorsScreenState();
-}
-
-class _SponsorsScreenState extends State<SponsorsScreen> {
-  @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -32,7 +29,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: widget.openDrawer,
+                onTap: openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -59,11 +56,14 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               width: 360.w,
               height: 640.h - 56.h - statusBarHeight,
               child: Consumer<SponsorsProvider>(
-                builder: (context, value, child) => Padding(
+                builder: (ctx, value, _) => Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.w),
                   child: value.allSponsors.isEmpty
-                      ? Center(child: CustomLoader().buildLoader())
+                      ? value.completed
+                          ? comingSoon()
+                          : Center(child: CustomLoader().buildLoader())
                       : StaggeredGridView.countBuilder(
+                          padding: EdgeInsets.zero,
                           staggeredTileBuilder: (index) => StaggeredTile.count(
                               value.allSponsors[index].tile == 'SQ' ? 1 : 2, 1),
                           crossAxisCount: 3,
@@ -72,7 +72,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                           crossAxisSpacing: 8.w,
                           itemBuilder: (BuildContext context, int index) {
                             final data = value.allSponsors[index];
-                            return sponsorTile(data);
+                            return sponsorTile(data, context);
                           },
                         ),
                 ),
@@ -84,7 +84,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
   }
 
-  Widget sponsorTile(SponsorTile data) {
+  Widget sponsorTile(SponsorTile data, BuildContext context) {
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -206,10 +206,9 @@ class BottomSheet extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      CustomSnackbar().showFloatingFlushBar(
+      showErrorFlush(
         context: context,
         message: 'Error loading URL, please try again!',
-        color: Colors.black,
       );
     }
   }

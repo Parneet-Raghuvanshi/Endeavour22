@@ -1,6 +1,7 @@
 import 'package:endeavour22/events/event_detail_screen.dart';
 import 'package:endeavour22/events/event_model.dart';
 import 'package:endeavour22/events/event_main_provider.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +13,11 @@ class EventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFEFEFE),
-        body: Stack(
+    return Scaffold(
+      backgroundColor: const Color(0xFFFEFEFE),
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -165,7 +167,7 @@ class EventScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventDetail(eventId: model.id),
+            builder: (context) => EventDetail(model: model),
           ),
         );
       },
@@ -199,7 +201,7 @@ class EventScreen extends StatelessWidget {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  color: const Color(0xFFAFF4FF),
+                  color: kLayer1Color,
                   child: Text(
                     model.name,
                     overflow: TextOverflow.ellipsis,
@@ -207,7 +209,7 @@ class EventScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18.sp,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -235,11 +237,14 @@ class EventScreen extends StatelessWidget {
               width: 128.w,
               height: 128.w,
               right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.android,
-                  size: 84.w,
+              child: Center(
+                child: Hero(
+                  tag: model.eventId,
+                  child: Image.network(
+                    model.imgUri,
+                    height: 78.w,
+                    width: 78.w,
+                  ),
                 ),
               ),
             ),

@@ -10,9 +10,10 @@ class AboutUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -185,10 +186,9 @@ class AboutUsScreen extends StatelessWidget {
         if (await canLaunch(url)) {
           await launch(url);
         } else {
-          CustomSnackbar().showFloatingFlushBar(
+          showErrorFlush(
             context: context,
             message: 'Error loading URL, please try again!',
-            color: Colors.black,
           );
         }
       },

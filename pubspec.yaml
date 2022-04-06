@@ -45,6 +45,9 @@ dependencies:
   url_launcher: ^6.0.20
   shared_preferences: ^2.0.12
   http: ^0.13.4
+  razorpay_flutter: ^1.2.9
+  flutter_svg: ^1.0.3
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +83,13 @@ flutter:
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Regular.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

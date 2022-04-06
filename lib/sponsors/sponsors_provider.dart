@@ -8,8 +8,11 @@ class SponsorsProvider with ChangeNotifier {
   List<SponsorTile> _sponsors = [];
   final _sponsorDB = FirebaseDatabase.instance.reference().child('sponsors');
   late StreamSubscription<DatabaseEvent> _sponsorsStream;
+  bool _completed = false;
 
   List<SponsorTile> get allSponsors => _sponsors;
+
+  bool get completed => _completed;
 
   SponsorsProvider() {
     _fetchSponsors();
@@ -19,6 +22,7 @@ class SponsorsProvider with ChangeNotifier {
     _sponsorsStream = _sponsorDB.onValue.listen((event) {
       if (event.snapshot.value == null) {
         _sponsors.clear();
+        _completed = true;
         notifyListeners();
       } else {
         final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
@@ -26,6 +30,7 @@ class SponsorsProvider with ChangeNotifier {
           final data = SponsorTile.fromMap(Map<String, dynamic>.from(e));
           return data;
         }).toList();
+        _completed = true;
         notifyListeners();
       }
     });

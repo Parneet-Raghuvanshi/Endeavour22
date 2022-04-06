@@ -1,10 +1,11 @@
+import 'package:endeavour22/schedule/schedule_provider.dart';
 import 'package:endeavour22/schedule/schedule_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleScreen extends StatefulWidget {
   final VoidCallback openDrawer;
@@ -16,10 +17,6 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen>
     with TickerProviderStateMixin {
-  final _dayOneDB =
-      FirebaseDatabase.instance.reference().child('schedule').child('dayone');
-  final _dayTwoDB =
-      FirebaseDatabase.instance.reference().child('schedule').child('daytwo');
   late TabController _appTitleController;
 
   @override
@@ -39,9 +36,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     double statusBarHeight = MediaQuery.of(context).padding.top;
     double width = MediaQuery.of(context).size.width;
     double yourWidth = width / 2;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -80,8 +78,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   TabBar(
                     physics: const NeverScrollableScrollPhysics(),
                     controller: _appTitleController,
-                    indicatorColor: Colors.black,
-                    labelColor: Colors.black,
+                    indicatorColor: kLayer6Color,
+                    labelColor: kLayer6Color,
                     unselectedLabelColor: Colors.black26,
                     isScrollable: false,
                     tabs: [
@@ -124,36 +122,41 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 
   Widget buildDayOne() {
-    return FirebaseAnimatedList(
-      defaultChild: Center(
-        child: CustomLoader().buildLoader(),
-      ),
-      query: _dayOneDB,
-      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-          Animation<double> animation, int index) {
-        final data = ScheduleTile.fromMap(snapshot.value as Map);
-        return scheduleTile(data, index);
-      },
+    return Consumer<ScheduleProvider>(
+      builder: (ctx, value, _) => value.dayOne.isEmpty
+          ? value.completedOne
+              ? comingSoon()
+              : Center(
+                  child: CustomLoader().buildLoader(),
+                )
+          : ListView.builder(
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) =>
+                  scheduleTile(value.dayOne[index], index),
+              itemCount: value.dayOne.length - 1,
+            ),
     );
   }
 
   Widget buildDayTwo() {
-    return FirebaseAnimatedList(
-      defaultChild: Center(
-        child: CustomLoader().buildLoader(),
-      ),
-      query: _dayTwoDB,
-      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-          Animation<double> animation, int index) {
-        final data = ScheduleTile.fromMap(snapshot.value as Map);
-        return scheduleTile(data, index);
-      },
+    return Consumer<ScheduleProvider>(
+      builder: (ctx, value, _) => value.dayTwo.isEmpty
+          ? value.completedTwo
+              ? comingSoon()
+              : Center(
+                  child: CustomLoader().buildLoader(),
+                )
+          : ListView.builder(
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) =>
+                  scheduleTile(value.dayTwo[index], index),
+              itemCount: value.dayTwo.length,
+            ),
     );
   }
 
   Widget scheduleTile(ScheduleTile data, int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 2.w),
+    return SizedBox(
       height: 124.w,
       width: 360.w,
       child: Stack(
@@ -163,7 +166,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             height: 124.w,
             width: 8.w,
             child: Container(
-              color: index % 2 == 0 ? Colors.lightBlueAccent : Colors.blue,
+              color: index % 2 == 0 ? kLayer1Color : kLayer5Color,
             ),
           ),
           Positioned(

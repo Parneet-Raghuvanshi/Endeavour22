@@ -13,9 +13,10 @@ class FaqScreen extends StatelessWidget {
     final _eventFaqDB =
         FirebaseDatabase.instance.reference().child('eventFaq').child(eventId);
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,

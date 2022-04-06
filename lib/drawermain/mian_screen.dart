@@ -1,4 +1,5 @@
 import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/drawer_items.dart';
 import 'package:endeavour22/drawermain/drawer_item.dart';
 import 'package:endeavour22/team/about_us_screen.dart';
@@ -9,7 +10,7 @@ import 'package:endeavour22/speakers/speakers_screen.dart';
 import 'package:endeavour22/sponsors/sponsors_screen.dart';
 import 'package:endeavour22/team/team_screen.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
-import 'package:endeavour22/widgets/drawer_widget.dart';
+import 'package:endeavour22/drawermain/drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  DateTime? currentBackPressTime;
   late double xOffset;
   late double yOffset;
   late double scaleFactor;
@@ -51,13 +53,32 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0XFFF1F0E8),
-      body: Stack(
-        children: [
-          buildDrawer(),
-          buildPage(),
-        ],
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        //backgroundColor: const Color(0XFFF1F0E8),
+        body: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              kLayer1Color,
+              kLayer6Color,
+            ],
+          )),
+          child: Stack(
+            children: [
+              // SvgPicture.asset(
+              //   'assets/images/greenback.svg',
+              //   height: 640.h,
+              //   fit: BoxFit.fitHeight,
+              // ),
+              buildDrawer(),
+              buildPage(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -69,11 +90,52 @@ class _MainScreenState extends State<MainScreen> {
             onSelectedItem: (item) {
               switch (item) {
                 case DrawerItems.logout:
-                  Provider.of<Auth>(context, listen: false).logout();
-                  CustomSnackbar().showFloatingFlushBar(
+                  showDialog(
                     context: context,
-                    message: 'Logout Successfully!',
-                    color: Colors.black,
+                    builder: (ctx) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      //title: const Text('Are You Sure!'),
+                      content: Text(
+                        'Do you want to logout?',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'No',
+                            style: TextStyle(
+                              color: kLayer6Color,
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Provider.of<Auth>(context, listen: false).logout();
+                            showNormalFlush(
+                              context: context,
+                              message: 'Logout Successfully!',
+                            );
+                          },
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(
+                              color: kLayer6Color,
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                   return;
                 default:
@@ -81,6 +143,7 @@ class _MainScreenState extends State<MainScreen> {
                   closeDrawer();
               }
             },
+            closeDrawer: closeDrawer,
           ),
         ),
       );
@@ -109,10 +172,10 @@ class _MainScreenState extends State<MainScreen> {
         },
         onTap: closeDrawer,
         child: AnimatedContainer(
-          curve: Curves.easeIn,
+          curve: Curves.easeOutSine,
           transform: Matrix4.translationValues(xOffset, yOffset, 0)
             ..scale(scaleFactor),
-          duration: const Duration(milliseconds: 180),
+          duration: const Duration(milliseconds: 220),
           child: AbsorbPointer(
             absorbing: isDrawerOpen,
             child: ClipRRect(
@@ -143,5 +206,30 @@ class _MainScreenState extends State<MainScreen> {
       default:
         return HomeScreen(openDrawer: openDrawer);
     }
+  }
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (isDrawerOpen) {
+      closeDrawer();
+      return Future.value(false);
+    }
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 3)) {
+      currentBackPressTime = now;
+      // showNormalFlush(
+      //   context: context,
+      //   message: 'Press back again to exit the application!',
+      // );
+      const snackBar = SnackBar(
+        content: Text('Press back again to exit the application!'),
+        duration: Duration(seconds: 3),
+      );
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(snackBar);
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 }

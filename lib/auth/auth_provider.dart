@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:endeavour22/auth/user_model.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class Auth with ChangeNotifier {
   UserModel? _userModel;
 
   bool get isAuth {
-    return token != '';
+    return _token != '';
   }
 
   String get token {
@@ -26,8 +27,7 @@ class Auth with ChangeNotifier {
   Future<void> login(String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://protected-chamber-92948.herokuapp.com/api/auth/login'),
+        Uri.parse('$serverURL/api/auth/login'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'email': email,
@@ -51,27 +51,30 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<bool> tryAutoLogin() async {
+  Future<void> tryAutoLogin(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userToken')) {
-      return false;
+      return;
     }
     final extractedData =
         json.decode(prefs.getString('userToken')!) as Map<String, dynamic>;
     _token = extractedData['token'];
     var status = await fetchUserData(_token);
     if (!status) {
-      return false;
+      _token = '';
+      showErrorFlush(
+        context: context,
+        message: "User Session Expired please login again!",
+      );
     }
     notifyListeners();
-    return true;
+    //return true;
   }
 
   Future<bool> fetchUserData(String token) async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'http://protected-chamber-92948.herokuapp.com/api/user/getUser'),
+        Uri.parse('$serverURL/api/user/getUser'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": token,
@@ -84,18 +87,17 @@ class Auth with ChangeNotifier {
       // update userModel
       final userData = UserModel.fromMap(responseData['data'] as Map);
       _userModel = userData;
+      return true;
     } catch (error) {
       rethrow;
     }
-    return true;
   }
 
   Future<void> signUp(String email, String password, String phoneNumber,
       String name, BuildContext context) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://protected-chamber-92948.herokuapp.com/api/auth/signup'),
+        Uri.parse('$serverURL/api/auth/signup'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'email': email,
@@ -109,11 +111,10 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['msg']);
       }
       // SIGNUP SUCCESSFUL
-      CustomSnackbar().showFloatingFlushBar(
+      showNormalFlush(
         context: context,
         message:
             "Account Created Successfully, please very you email and then longin!",
-        color: Colors.lightGreen,
       );
       notifyListeners();
     } catch (error) {
@@ -122,11 +123,10 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> updateProfile(String clgName, String clgId, String branch,
-      String sem, BuildContext context, bool isFirstTime) async {
+      String sem, String name, BuildContext context, bool isFirstTime) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://protected-chamber-92948.herokuapp.com/api/user/updateProfile'),
+        Uri.parse('$serverURL/api/user/updateProfile'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": token,
@@ -136,24 +136,29 @@ class Auth with ChangeNotifier {
           'libId': clgId,
           'branch': branch,
           'semester': sem,
+          'name': name,
         }),
       );
       final responseData = json.decode(response.body);
-      print(responseData['hasError']);
       if (responseData['hasError']) {
-        print(responseData['msg']);
         throw HttpException(responseData['msg']);
       }
       // Update Successful
-      _userModel!.profile = true;
-      CustomSnackbar().showFloatingFlushBar(
-        context: context,
-        message: "Profile Completed Successfully!",
-        color: Colors.lightGreen,
-      );
-      notifyListeners();
+      if (isFirstTime) {
+        _userModel!.profile = true;
+        showNormalFlush(
+          context: context,
+          message: "Profile Completed Successfully!",
+        );
+        notifyListeners();
+      } else {
+        Navigator.of(context).pop();
+        showNormalFlush(
+          context: context,
+          message: "Profile Updated Successfully!",
+        );
+      }
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

@@ -1,30 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/speakers/speaker_tile.dart';
+import 'package:endeavour22/speakers/speakers_provider.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SpeakersScreen extends StatefulWidget {
+class SpeakersScreen extends StatelessWidget {
   final VoidCallback openDrawer;
   const SpeakersScreen({Key? key, required this.openDrawer}) : super(key: key);
 
   @override
-  State<SpeakersScreen> createState() => _SpeakersScreenState();
-}
-
-class _SpeakersScreenState extends State<SpeakersScreen> {
-  final _speakerDB = FirebaseDatabase.instance.reference().child('speakers');
-  @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -32,7 +28,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: widget.openDrawer,
+                onTap: openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -58,16 +54,19 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
               top: 56.h,
               width: 360.w,
               height: 640.h - 56.h - statusBarHeight,
-              child: FirebaseAnimatedList(
-                defaultChild: Center(
-                  child: CustomLoader().buildLoader(),
-                ),
-                query: _speakerDB,
-                itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                    Animation<double> animation, int index) {
-                  final data = SpeakerTile.fromMap(snapshot.value as Map);
-                  return speakerTile(data);
-                },
+              child: Consumer<SpeakerProvider>(
+                builder: (ctx, value, _) => value.allSpeakers.isEmpty
+                    ? value.completed
+                        ? comingSoon()
+                        : Center(
+                            child: CustomLoader().buildLoader(),
+                          )
+                    : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) =>
+                            speakerTile(value.allSpeakers[index], context),
+                        itemCount: value.allSpeakers.length,
+                      ),
               ),
             ),
           ],
@@ -76,7 +75,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
     );
   }
 
-  Widget speakerTile(SpeakerTile data) {
+  Widget speakerTile(SpeakerTile data, BuildContext context) {
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -178,7 +177,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.deepPurpleAccent,
+                  color: kLayer1Color,
                   child: RotatedBox(
                     quarterTurns: 3,
                     child: Text(
@@ -289,10 +288,9 @@ class BottomSheet extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      CustomSnackbar().showFloatingFlushBar(
+      showErrorFlush(
         context: context,
         message: 'Error loading URL, please try again!',
-        color: Colors.black,
       );
     }
   }

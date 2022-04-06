@@ -6,6 +6,8 @@ class EventModel {
   String isOpen;
   String memberCount;
   String desc;
+  String price;
+  String mongoId;
 
   EventModel({
     required this.name,
@@ -15,6 +17,8 @@ class EventModel {
     required this.isOpen,
     required this.memberCount,
     required this.desc,
+    required this.price,
+    required this.mongoId,
   });
 
   factory EventModel.fromMap(Map map) {
@@ -26,6 +30,8 @@ class EventModel {
       isOpen: map['isOpen'],
       memberCount: map['memberCount'],
       desc: map['desc'],
+      price: map['price'],
+      mongoId: map['mongoId'],
     );
   }
 }

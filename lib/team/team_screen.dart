@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:endeavour22/helper/constants.dart';
+import 'package:endeavour22/team/team_provider.dart';
 import 'package:endeavour22/team/team_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
@@ -7,24 +9,20 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class TeamScreen extends StatefulWidget {
+class TeamScreen extends StatelessWidget {
   final VoidCallback openDrawer;
   const TeamScreen({Key? key, required this.openDrawer}) : super(key: key);
 
   @override
-  State<TeamScreen> createState() => _TeamScreenState();
-}
-
-class _TeamScreenState extends State<TeamScreen> {
-  final _teamDB = FirebaseDatabase.instance.reference().child('team');
-  @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: statusBarHeight),
+        child: Stack(
           children: [
             Positioned(
               top: 0,
@@ -32,7 +30,7 @@ class _TeamScreenState extends State<TeamScreen> {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: widget.openDrawer,
+                onTap: openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -58,16 +56,19 @@ class _TeamScreenState extends State<TeamScreen> {
               top: 56.h,
               width: 360.w,
               height: 640.h - 56.h - statusBarHeight,
-              child: FirebaseAnimatedList(
-                defaultChild: Center(
-                  child: CustomLoader().buildLoader(),
-                ),
-                query: _teamDB,
-                itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                    Animation<double> animation, int index) {
-                  final TeamTile data = TeamTile.fromMap(snapshot.value as Map);
-                  return eventTile(data);
-                },
+              child: Consumer<TeamProvider>(
+                builder: (ctx, value, _) => value.allTeam.isEmpty
+                    ? value.completed
+                        ? comingSoon()
+                        : Center(
+                            child: CustomLoader().buildLoader(),
+                          )
+                    : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) =>
+                            eventTile(value.allTeam[index], context),
+                        itemCount: value.allTeam.length,
+                      ),
               ),
             ),
           ],
@@ -76,7 +77,7 @@ class _TeamScreenState extends State<TeamScreen> {
     );
   }
 
-  Widget eventTile(TeamTile data) {
+  Widget eventTile(TeamTile data, BuildContext context) {
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -157,7 +158,7 @@ class _TeamScreenState extends State<TeamScreen> {
                   bottomRight: Radius.circular(8),
                 ),
                 child: Container(
-                  color: Colors.deepPurpleAccent,
+                  color: kLayer1Color,
                   alignment: Alignment.center,
                   child: Text(
                     data.domain,
@@ -267,10 +268,9 @@ class BottomSheet extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      CustomSnackbar().showFloatingFlushBar(
+      showErrorFlush(
         context: context,
         message: 'Error loading URL, please try again!',
-        color: Colors.black,
       );
     }
   }

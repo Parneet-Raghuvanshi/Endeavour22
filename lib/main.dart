@@ -1,10 +1,15 @@
 import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/auth/login_screen.dart';
 import 'package:endeavour22/auth/profile_screen.dart';
 import 'package:endeavour22/drawermain/mian_screen.dart';
 import 'package:endeavour22/events/event_content_provider.dart';
 import 'package:endeavour22/events/event_main_provider.dart';
+import 'package:endeavour22/events/event_registration_provider.dart';
+import 'package:endeavour22/notifications/notification_provider.dart';
+import 'package:endeavour22/schedule/schedule_provider.dart';
+import 'package:endeavour22/speakers/speakers_provider.dart';
 import 'package:endeavour22/sponsors/sponsors_provider.dart';
-import 'package:endeavour22/auth/auth_screen.dart';
+import 'package:endeavour22/team/team_provider.dart';
 import 'package:endeavour22/widgets/spalsh_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +46,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => EventMainProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => TeamProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => SpeakerProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ScheduleProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => NotificationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => EventRegistrationProvider(),
+        ),
       ],
       child: ScreenUtilInit(
         builder: () => Consumer<Auth>(
@@ -48,6 +68,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Endeavour 22',
             theme: ThemeData(
+              fontFamily: 'Nunito',
               primarySwatch: Colors.blue,
             ),
             home: auth.isAuth
@@ -55,14 +76,14 @@ class MyApp extends StatelessWidget {
                     ? const SplashScreen()
                     : auth.userModel!.profile
                         ? const MainScreen()
-                        : const ProfileScreen()
+                        : const ProfileScreen(isUpdate: false)
                 : FutureBuilder(
-                    future: auth.tryAutoLogin(),
+                    future: auth.tryAutoLogin(context),
                     builder: (ctx, authResultSnapshot) =>
                         authResultSnapshot.connectionState ==
                                 ConnectionState.waiting
                             ? const SplashScreen()
-                            : const AuthScreen(),
+                            : const LoginScreen(),
                   ),
           ),
         ),
