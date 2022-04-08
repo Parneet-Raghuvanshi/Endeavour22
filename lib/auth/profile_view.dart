@@ -12,7 +12,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserModel user = Provider.of<Auth>(context, listen: false).userModel!;
+    final UserModel user = Provider.of<Auth>(context).userModel!;
     final statusBar = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: Column(
@@ -41,7 +41,7 @@ class ProfileView extends StatelessWidget {
                 height: 96.h,
                 width: 96.h,
                 child: Text(
-                  user.name[0],
+                  user.name[0].toUpperCase(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 56.sp,

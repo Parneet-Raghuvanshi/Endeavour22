@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: 16.h,
               ),
               child: Text(
-                'Our Guests',
+                'Glimpses',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24.sp,
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: EdgeInsets.only(
                 left: 24.w,
                 right: 24.w,
-                bottom: 16.h,
+                bottom: 8.h,
               ),
               child: Text(
                 'Contact Us',
@@ -193,6 +193,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            Text(
+              'Message',
+              style: TextStyle(
+                fontSize: 16.sp,
+              ),
+            ),
+            SizedBox(height: 8.w),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 26.w),
               decoration: BoxDecoration(
@@ -213,22 +220,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black,
                   fontSize: 16.sp,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Subject',
-                  hintStyle: const TextStyle(color: Colors.black),
-                  icon: SizedBox(
-                    width: 24.w,
-                    height: 24.w,
-                    child: Image.asset(
-                      'assets/images/email.png',
-                      color: Colors.black,
-                    ),
-                  ),
+                  hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
                 ),
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 8.h),
+            Text(
+              'Message',
+              style: TextStyle(
+                fontSize: 16.sp,
+              ),
+            ),
+            SizedBox(height: 8.w),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 26.w),
               decoration: BoxDecoration(
@@ -240,26 +246,19 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               width: 312.w,
-              height: 48.h,
+              height: 96.h,
               child: TextField(
+                maxLines: 4,
                 autofocus: false,
-                textAlignVertical: TextAlignVertical.center,
+                textAlignVertical: TextAlignVertical.top,
                 cursorColor: Colors.black,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16.sp,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'How we can help you...',
-                  hintStyle: const TextStyle(color: Colors.black),
-                  icon: SizedBox(
-                    width: 24.w,
-                    height: 24.w,
-                    child: Image.asset(
-                      'assets/images/email.png',
-                      color: Colors.black,
-                    ),
-                  ),
+                  hintStyle: TextStyle(color: Colors.black),
                   border: InputBorder.none,
                 ),
               ),
@@ -301,74 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
             ),
-            SizedBox(height: 26.h),
-            Container(
-              margin: EdgeInsets.only(
-                left: 24.w,
-                right: 24.w,
-                bottom: 8.w,
-              ),
-              child: Text(
-                'Created By',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Container(
-              width: 360.w,
-              height: 156.w,
-              padding: EdgeInsets.symmetric(horizontal: 26.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 108.w,
-                    height: 156.w,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(16.w),
-                          width: 108.w,
-                          height: 108.w,
-                          child: Image.asset('assets/images/woman.png'),
-                        ),
-                        Center(
-                          child: Text(
-                            'Tanika\nGulati',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16.sp),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 108.w,
-                    height: 156.w,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(16.w),
-                          width: 108.w,
-                          height: 108.w,
-                          child: Image.asset('assets/images/man.png'),
-                        ),
-                        Center(
-                          child: Text(
-                            'Dhruv\nRastogi',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16.sp),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
             SizedBox(height: 16.h),
           ],
         ),
@@ -379,49 +310,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildCarousel() {
     return CarouselSlider(
       items: [
-        Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              height: 260.w,
-              width: 260.w,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(
-                      "https://firebasestorage.googleapis.com/v0/b/endeavour-21.appspot.com/o/teams%2FIMG_20181229_142945newasqre.jpg?alt=media&token=701f3216-63ac-46af-ac14-6d60be819708"),
-                  fit: BoxFit.cover,
-                ),
-              ),
+        Container(
+          height: 274.w,
+          width: 274.w,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white70,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(12.w),
-                  bottomRight: Radius.circular(12.w),
-                ),
-              ),
-              height: 42.w,
-              child: Center(
-                child: Text(
-                  'Parneet Raghavanshi',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            image: DecorationImage(
+              image: AssetImage('assets/images/a0010.jpg'),
+              fit: BoxFit.cover,
             ),
-          ],
+          ),
         ),
       ],
       options: CarouselOptions(
         autoPlay: true,
-        height: 260.w,
+        height: 274.w,
         autoPlayCurve: Curves.easeInOut,
       ),
     );

@@ -24,7 +24,7 @@ class DrawerWidget extends StatelessWidget {
   }
 
   Widget buildDrawerItems(BuildContext context) {
-    final UserModel user = Provider.of<Auth>(context, listen: false).userModel!;
+    final UserModel user = Provider.of<Auth>(context).userModel!;
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(16),

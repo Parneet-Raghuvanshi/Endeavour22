@@ -66,9 +66,9 @@ class Auth with ChangeNotifier {
         context: context,
         message: "User Session Expired please login again!",
       );
+      return;
     }
     notifyListeners();
-    //return true;
   }
 
   Future<bool> fetchUserData(String token) async {
@@ -87,6 +87,7 @@ class Auth with ChangeNotifier {
       // update userModel
       final userData = UserModel.fromMap(responseData['data'] as Map);
       _userModel = userData;
+      notifyListeners();
       return true;
     } catch (error) {
       rethrow;
@@ -122,6 +123,53 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> forgotPassword(String email, BuildContext context) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$serverURL/api/auth/forgotpassword'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({'email': email}),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error']) {
+        throw HttpException(responseData['msg']);
+      }
+      // REQUEST SEND
+      showNormalFlush(
+        context: context,
+        message: responseData['msg'],
+      );
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  Future<void> changePassword(String email, String oldPass, String newPass,
+      BuildContext context) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$serverURL/api/user/changePassword'),
+        headers: {"content-Type": "application/json"},
+        body: json.encode({
+          'email': email,
+          'oldPassword': oldPass,
+          'newPassword': newPass,
+        }),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error']) {
+        throw HttpException(responseData['msg']);
+      }
+      // CHANGE PASSWORD LINK SEND
+      showNormalFlush(
+        context: context,
+        message: responseData['msg'],
+      );
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
   Future<void> updateProfile(String clgName, String clgId, String branch,
       String sem, String name, BuildContext context, bool isFirstTime) async {
     try {
@@ -143,14 +191,14 @@ class Auth with ChangeNotifier {
       if (responseData['hasError']) {
         throw HttpException(responseData['msg']);
       }
+      // Again Fetch UserData
+      await fetchUserData(_token);
       // Update Successful
       if (isFirstTime) {
-        _userModel!.profile = true;
         showNormalFlush(
           context: context,
           message: "Profile Completed Successfully!",
         );
-        notifyListeners();
       } else {
         Navigator.of(context).pop();
         showNormalFlush(
@@ -158,6 +206,7 @@ class Auth with ChangeNotifier {
           message: "Profile Updated Successfully!",
         );
       }
+      notifyListeners();
     } catch (error) {
       rethrow;
     }

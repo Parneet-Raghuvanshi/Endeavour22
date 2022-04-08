@@ -169,6 +169,27 @@ class AboutUsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 24.h),
+                      Center(
+                        child: InkWell(
+                          onTap: () => showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return const BottomSheet();
+                            },
+                          ),
+                          child: Text(
+                            '@Tech Team - 2022',
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -196,6 +217,105 @@ class AboutUsScreen extends StatelessWidget {
         height: 28.w,
         width: 28.w,
         child: Image.asset(icon),
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 6.w,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(8.0),
+            //     child: Container(
+            //       height: 5.0,
+            //       width: 40.0,
+            //       color: Colors.black87,
+            //     ),
+            //   ),
+            // ),
+            SizedBox(height: 16.w),
+            Text(
+              'Developed by',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 16.w),
+            Container(
+              color: Colors.black26,
+              height: 1.w,
+            ),
+            Container(
+              width: 360.w,
+              height: 156.w,
+              padding: EdgeInsets.symmetric(horizontal: 26.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 108.w,
+                    height: 156.w,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(16.w),
+                          width: 108.w,
+                          height: 108.w,
+                          child: Image.asset('assets/images/woman.png'),
+                        ),
+                        Center(
+                          child: Text(
+                            'Tanika\nGulati',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 108.w,
+                    height: 156.w,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(16.w),
+                          width: 108.w,
+                          height: 108.w,
+                          child: Image.asset('assets/images/man.png'),
+                        ),
+                        Center(
+                          child: Text(
+                            'Dhruv\nRastogi',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

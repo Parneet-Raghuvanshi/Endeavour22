@@ -24,7 +24,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,20 +73,23 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Nunito',
               primarySwatch: Colors.blue,
             ),
-            home: auth.isAuth
-                ? auth.userModel == null
-                    ? const SplashScreen()
-                    : auth.userModel!.profile
-                        ? const MainScreen()
-                        : const ProfileScreen(isUpdate: false)
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(context),
-                    builder: (ctx, authResultSnapshot) =>
-                        authResultSnapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? const SplashScreen()
-                            : const LoginScreen(),
-                  ),
+            initialRoute: '/',
+            routes: {
+              '/': (contextMain) => auth.isAuth
+                  ? auth.userModel == null
+                      ? const SplashScreen()
+                      : auth.userModel!.profile
+                          ? const MainScreen()
+                          : const ProfileScreen(isUpdate: false)
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(contextMain),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? const SplashScreen()
+                              : const LoginScreen(),
+                    ),
+            },
           ),
         ),
         designSize: const Size(360, 640),

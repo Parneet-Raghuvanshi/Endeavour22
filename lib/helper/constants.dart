@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 // SERVER URL
-//const serverURL = 'http://protected-chamber-92948.herokuapp.com';
+const serverURL = 'http://protected-chamber-92948.herokuapp.com';
 //const serverURL = 'http://10.0.2.2:7000';
-const serverURL = 'http://192.168.171.231:7000';
+//const serverURL = 'http://192.168.171.231:7000';
 //const serverURL = 'http://192.168.0.142:7000';
 
 // COLORS
