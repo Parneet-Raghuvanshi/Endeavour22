@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   DateTime? currentBackPressTime;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailForgot = TextEditingController();
   bool _isLoading = false;
 
   Future<void> _submit() async {
@@ -58,17 +59,19 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         message: error.toString(),
       );
+      setState(() {
+        _isLoading = false;
+      });
     } catch (error) {
       String errorMessage = 'Could not authenticate, please try again!';
       showErrorFlush(
         context: context,
         message: errorMessage,
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   bool _isObscure = true;
@@ -208,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 24.h),
                 Center(
                   child: _isLoading
                       ? SizedBox(
@@ -276,6 +279,172 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'OR',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      bool _isLoading = false;
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => StatefulBuilder(
+                          builder: (context, setState) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            title: Text(
+                              'Forgot Password',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                color: Colors.black,
+                              ),
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  color: Colors.black26,
+                                  height: 1.w,
+                                ),
+                                SizedBox(height: 16.w),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  alignment: Alignment.center,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.w),
+                                  width: 312.w,
+                                  height: 48.h,
+                                  child: TextField(
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: _emailForgot,
+                                    autofocus: false,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    cursorColor: Colors.black,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.sp,
+                                    ),
+                                    decoration: InputDecoration(
+                                      hintText: 'Email',
+                                      hintStyle:
+                                          const TextStyle(color: Colors.black),
+                                      icon: SizedBox(
+                                        width: 24.w,
+                                        height: 24.w,
+                                        child: Image.asset(
+                                          'assets/images/email.png',
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16.w),
+                                Center(
+                                  child: _isLoading
+                                      ? SizedBox(
+                                          height: 36.h,
+                                          child: Center(
+                                            child: CustomLoader().buildLoader(),
+                                          ),
+                                        )
+                                      : InkWell(
+                                          onTap: () async {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            // send request for change password...
+                                            final email =
+                                                _emailForgot.text.trim();
+
+                                            if (email.isEmpty) {
+                                              showErrorFlush(
+                                                context: context,
+                                                message:
+                                                    'Email field is empty!',
+                                              );
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              return;
+                                            }
+                                            // now send request
+                                            try {
+                                              await Provider.of<Auth>(context,
+                                                      listen: false)
+                                                  .forgotPassword(
+                                                      email, context);
+                                            } on HttpException catch (error) {
+                                              showErrorFlush(
+                                                context: context,
+                                                message: error.toString(),
+                                              );
+                                            } catch (error) {
+                                              String errorMessage =
+                                                  'Could not send request, please try again!';
+                                              showErrorFlush(
+                                                context: context,
+                                                message: errorMessage,
+                                              );
+                                            }
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors.black12, //New
+                                                  blurRadius: 10.0,
+                                                  offset: Offset(0.5, 0.5),
+                                                ),
+                                              ],
+                                            ),
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.w),
+                                            width: 124.w,
+                                            height: 36.h,
+                                            child: Text(
+                                              'Request',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Forgot Password',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.sp,
+                      ),
+                    ),
                   ),
                 ),
               ],

@@ -73,6 +73,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await Provider.of<Auth>(context, listen: false)
           .signUp(_email, _password, _phoneNumber, _name, context);
+      // now here clear all the input form
+      Navigator.of(context).pop();
+      showNormalFlush(
+        context: context,
+        message:
+            "Account Created Successfully, please very you email and then longin!",
+      );
     } on HttpException catch (error) {
       showErrorFlush(
         context: context,

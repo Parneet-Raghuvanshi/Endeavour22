@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 // SERVER URL
 const serverURL = 'http://protected-chamber-92948.herokuapp.com';
@@ -15,7 +18,23 @@ const kLayer5Color = Color(0xFF00917B);
 const kLayer6Color = Color(0xFF038373);
 
 Widget comingSoon() {
-  return const Center(
-    child: Text('Coming Soon'),
+  return Container(
+    alignment: Alignment.center,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SvgPicture.asset(
+          'assets/images/coming_soon.svg',
+          height: 200.w,
+          width: 200.w,
+          fit: BoxFit.cover,
+        ),
+        SizedBox(height: 24.w),
+        Text(
+          'Coming Soon...',
+          style: TextStyle(fontSize: 16.sp),
+        ),
+      ],
+    ),
   );
 }

@@ -5,6 +5,7 @@ import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -86,8 +87,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   Widget noNewNotifications() {
-    return const Center(
-      child: Text('No New Notifications'),
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            'assets/images/no_new_not.svg',
+            height: 200.w,
+            width: 200.w,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 16.w),
+          Text(
+            'No Notifications Here...',
+            style: TextStyle(fontSize: 16.sp),
+          ),
+        ],
+      ),
     );
   }
 
@@ -121,8 +138,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 Text(
                   model.title,
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16.sp,
+                    color: Colors.black54,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -130,8 +147,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 Text(
                   model.body,
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16.sp,
+                    color: Colors.black54,
+                    fontSize: 14.sp,
                   ),
                   textAlign: TextAlign.justify,
                 ),

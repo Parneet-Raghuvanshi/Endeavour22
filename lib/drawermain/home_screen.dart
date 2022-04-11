@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/drawermain/glimpses_provider.dart';
 import 'package:endeavour22/helper/constants.dart';
+import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/notifications/badge.dart';
 import 'package:endeavour22/notifications/notification_provider.dart';
 import 'package:endeavour22/notifications/notification_screen.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
+import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback openDrawer;
@@ -20,6 +27,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
+  final _subjectController = TextEditingController();
+  final _messageController = TextEditingController();
 
   @override
   void initState() {
@@ -193,10 +202,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Text(
-              'Message',
-              style: TextStyle(
-                fontSize: 16.sp,
+            Container(
+              margin: EdgeInsets.only(left: 26.w),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Subject',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 8.w),
@@ -213,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 312.w,
               height: 48.h,
               child: TextField(
+                controller: _subjectController,
                 autofocus: false,
                 textAlignVertical: TextAlignVertical.center,
                 cursorColor: Colors.black,
@@ -221,17 +237,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 16.sp,
                 ),
                 decoration: const InputDecoration(
-                  hintText: 'Subject',
+                  hintText: 'Specify your subject...',
                   hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
                 ),
               ),
             ),
             SizedBox(height: 8.h),
-            Text(
-              'Message',
-              style: TextStyle(
-                fontSize: 16.sp,
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 26.w),
+              child: Text(
+                'Message',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 8.w),
@@ -248,6 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 312.w,
               height: 96.h,
               child: TextField(
+                controller: _messageController,
                 maxLines: 4,
                 autofocus: false,
                 textAlignVertical: TextAlignVertical.top,
@@ -258,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 decoration: const InputDecoration(
                   hintText: 'How we can help you...',
-                  hintStyle: TextStyle(color: Colors.black),
+                  hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
                 ),
               ),
@@ -273,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   : InkWell(
-                      onTap: () {},
+                      onTap: submitContactUs,
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.black,
@@ -307,28 +331,99 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void submitContactUs() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final subject = _subjectController.text.trim();
+    final message = _messageController.text.trim();
+
+    if (subject.isEmpty) {
+      showErrorFlush(
+        context: context,
+        message: 'Subject field is empty!',
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    } else if (message.isEmpty) {
+      showErrorFlush(
+        context: context,
+        message: 'Message field is empty!',
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    // now send request here...
+    final userData = Provider.of<Auth>(context, listen: false).userModel!;
+    try {
+      final response = await http.post(
+        Uri.parse('$serverURL/api/user/contactUs'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          'name': userData.name,
+          'subject': subject,
+          'email': userData.email,
+          'content': message,
+        }),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['hasError']) {
+        throw HttpException(responseData['msg']);
+      }
+      // clear the form after submitting
+      _subjectController.clear();
+      _messageController.clear();
+      // Form Send
+      showErrorFlush(
+        context: context,
+        message: 'Contact Form Submitted Successfully!',
+      );
+    } catch (error) {
+      print(error.toString());
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   Widget buildCarousel() {
-    return CarouselSlider(
-      items: [
-        Container(
-          height: 274.w,
-          width: 274.w,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
+    return Consumer<GlimpsesProvider>(builder: (ctx, value, _) {
+      if (value.glimpses.isNotEmpty) {
+        var widgets = <Widget>[];
+        for (var element in value.glimpses) {
+          widgets.add(
+            Container(
+              height: 274.w,
+              width: 274.w,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(element),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            image: DecorationImage(
-              image: AssetImage('assets/images/a0010.jpg'),
-              fit: BoxFit.cover,
-            ),
+          );
+        }
+        return CarouselSlider(
+          items: widgets,
+          options: CarouselOptions(
+            autoPlay: true,
+            height: 274.w,
+            autoPlayCurve: Curves.easeInOut,
           ),
-        ),
-      ],
-      options: CarouselOptions(
-        autoPlay: true,
-        height: 274.w,
-        autoPlayCurve: Curves.easeInOut,
-      ),
-    );
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 }

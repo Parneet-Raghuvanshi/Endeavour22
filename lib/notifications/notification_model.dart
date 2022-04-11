@@ -22,4 +22,12 @@ class NotificationModel {
       read: map['read'],
     );
   }
+
+  Map<String, dynamic> toMap() => {
+        'title': title,
+        'body': body,
+        'id': id,
+        'date': date,
+        'read': read,
+      };
 }

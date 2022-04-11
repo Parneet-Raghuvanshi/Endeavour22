@@ -1,10 +1,12 @@
 import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/auth/profile_view.dart';
 import 'package:endeavour22/auth/user_model.dart';
 import 'package:endeavour22/events/event_detail_tile.dart';
 import 'package:endeavour22/events/event_content_provider.dart';
 import 'package:endeavour22/events/event_model.dart';
 import 'package:endeavour22/events/event_registration_provider.dart';
 import 'package:endeavour22/events/faq_screen.dart';
+import 'package:endeavour22/helper/navigator.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -152,6 +154,11 @@ class _EventDetailState extends State<EventDetail> {
                 child: InkWell(
                   onTap: () {
                     // go to profile
+                    Navigator.of(context).push(
+                      SlideRightRoute(
+                        page: const ProfileView(),
+                      ),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
