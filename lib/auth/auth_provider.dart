@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:endeavour22/auth/user_model.dart';
@@ -172,12 +173,13 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['msg']);
       }
       // REQUEST SEND
+      Navigator.of(context).pop();
       showNormalFlush(
         context: context,
         message: responseData['msg'],
       );
     } catch (error) {
-      print(error.toString());
+      rethrow;
     }
   }
 
@@ -196,17 +198,17 @@ class Auth with ChangeNotifier {
         }),
       );
       final responseData = json.decode(response.body);
-      print(responseData);
       if (responseData['hasError']) {
         throw HttpException(responseData['msg']);
       }
       // CHANGE PASSWORD LINK SEND
+      Navigator.of(context).pop();
       showNormalFlush(
         context: context,
         message: responseData['msg'],
       );
     } catch (error) {
-      print(error.toString());
+      rethrow;
     }
   }
 

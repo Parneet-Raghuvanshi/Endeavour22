@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/auth/profile_screen.dart';
 import 'package:endeavour22/auth/user_model.dart';
@@ -11,13 +13,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 
   @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final _oldPass = TextEditingController();
+  final _newPass = TextEditingController();
+
+  @override
+  void initState() {
+    // TO REFRESH THE USER DATA
+    final token = Provider.of<Auth>(context, listen: false).token;
+    Provider.of<Auth>(context, listen: false).fetchUserData(token);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final _oldPass = TextEditingController();
-    final _newPass = TextEditingController();
     final UserModel user = Provider.of<Auth>(context).userModel!;
     final List<RegisteredModel> list = Provider.of<Auth>(context).registered;
     final statusBar = MediaQuery.of(context).padding.top;
@@ -231,6 +247,7 @@ class ProfileView extends StatelessWidget {
                                     )
                                   : InkWell(
                                       onTap: () async {
+                                        //Navigator.of(context).pop();
                                         setState(() {
                                           _isLoading = true;
                                         });
@@ -238,7 +255,7 @@ class ProfileView extends StatelessWidget {
                                         final newPass = _newPass.text.trim();
                                         final oldPass = _oldPass.text.trim();
 
-                                        if (newPass.isEmpty) {
+                                        if (oldPass.isEmpty) {
                                           showErrorFlush(
                                             context: context,
                                             message: 'Old password is empty!',
@@ -247,7 +264,7 @@ class ProfileView extends StatelessWidget {
                                             _isLoading = false;
                                           });
                                           return;
-                                        } else if (oldPass.isEmpty) {
+                                        } else if (newPass.isEmpty) {
                                           showErrorFlush(
                                             context: context,
                                             message: 'New password is empty!',
@@ -266,6 +283,8 @@ class ProfileView extends StatelessWidget {
                                             newPass,
                                             context,
                                           );
+                                          _newPass.clear();
+                                          _oldPass.clear();
                                         } on HttpException catch (error) {
                                           showErrorFlush(
                                             context: context,
@@ -279,7 +298,9 @@ class ProfileView extends StatelessWidget {
                                             message: errorMessage,
                                           );
                                         }
-                                        Navigator.of(context).pop(true);
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(

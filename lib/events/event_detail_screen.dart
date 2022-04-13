@@ -27,8 +27,6 @@ class _EventDetailState extends State<EventDetail> {
   bool isRegistered = false;
   @override
   void initState() {
-    Provider.of<EventContentProvider>(context, listen: false)
-        .fetchData(widget.model.id);
     final registered =
         Provider.of<Auth>(context, listen: false).userModel!.registered;
     for (Registered entry in registered) {
@@ -36,10 +34,26 @@ class _EventDetailState extends State<EventDetail> {
         isRegistered = true;
       }
     }
+    // REFRESH USER DATA
+    refreshUserData();
+    Provider.of<EventContentProvider>(context, listen: false)
+        .fetchData(widget.model.id);
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
+  }
+
+  Future<void> refreshUserData() async {
+    final token = Provider.of<Auth>(context, listen: false).token;
+    await Provider.of<Auth>(context, listen: false).fetchUserData(token);
+    final registered =
+        Provider.of<Auth>(context, listen: false).userModel!.registered;
+    for (Registered entry in registered) {
+      if (entry.event == widget.model.mongoId) {
+        isRegistered = true;
+      }
+    }
   }
 
   @override
@@ -142,7 +156,7 @@ class _EventDetailState extends State<EventDetail> {
                 vertical: 16.w,
               ),
               child: Text(
-                "Market Watch",
+                widget.model.name,
                 style: TextStyle(
                   fontSize: 24.sp,
                 ),
@@ -216,6 +230,7 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                 ),
               ),
+            SizedBox(height: 24.w),
           ],
         ),
       ),
@@ -924,12 +939,12 @@ class _EventDetailState extends State<EventDetail> {
 
   Widget bulletLine(String text, int len) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         if (len > 1) const Text("● "),
         Expanded(
           child: Text(
-            text,
+            text.replaceAll('\\n', '\n'),
             style: TextStyle(
               fontSize: 14.sp,
             ),

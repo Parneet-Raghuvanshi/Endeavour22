@@ -89,7 +89,7 @@ class FaqScreen extends StatelessWidget {
 
   Widget buildLine(String text, String tag) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(tag + ". "),
         Expanded(

@@ -390,6 +390,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       listen: false)
                                                   .forgotPassword(
                                                       email, context);
+                                              _emailForgot.clear();
                                             } on HttpException catch (error) {
                                               showErrorFlush(
                                                 context: context,
@@ -403,6 +404,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 message: errorMessage,
                                               );
                                             }
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
