@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/auth/profile_screen.dart';
 import 'package:endeavour22/auth/user_model.dart';
@@ -479,14 +477,34 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
             SizedBox(height: 16.h),
-            ListView.builder(
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) =>
-                  buildRegisteredTile(list[index], context),
-              itemCount: list.length,
-            ),
+            list.isEmpty
+                ? Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/no_new_not.svg',
+                          height: 108.w,
+                          width: 108.w,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(height: 16.w),
+                        Text(
+                          "You haven't registered yet...",
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        buildRegisteredTile(list[index], context),
+                    itemCount: list.length,
+                  ),
             SizedBox(height: 16.w),
           ],
         ),

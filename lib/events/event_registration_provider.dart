@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:endeavour22/helper/constants.dart';
+import 'package:endeavour22/helper/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +23,7 @@ class EventRegistrationProvider with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       if (responseData['hasError']) {
-        return null;
+        throw HttpException(responseData['msg']);
       }
       final payRes = PayResponse.fromMap(responseData['data'] as Map);
       return payRes;

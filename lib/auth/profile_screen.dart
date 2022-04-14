@@ -4,6 +4,7 @@ import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -320,6 +321,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 146.w,
                       height: 48.h,
                       child: TextField(
+                        maxLines: 1,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                        ],
                         autofocus: false,
                         controller: _semController,
                         textAlignVertical: TextAlignVertical.center,

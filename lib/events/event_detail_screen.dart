@@ -6,9 +6,12 @@ import 'package:endeavour22/events/event_content_provider.dart';
 import 'package:endeavour22/events/event_model.dart';
 import 'package:endeavour22/events/event_registration_provider.dart';
 import 'package:endeavour22/events/faq_screen.dart';
+import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/helper/navigator.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
+import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -266,6 +269,10 @@ class _EventDetailState extends State<EventDetail> {
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: TextField(
+                  maxLines: 1,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(15),
+                  ],
                   controller: _member1..text = userData.endvrid,
                   enabled: false,
                   autofocus: false,
@@ -302,6 +309,11 @@ class _EventDetailState extends State<EventDetail> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    maxLines: 1,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(15),
+                    ],
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
                     controller: _member2,
                     autofocus: false,
                     textAlignVertical: TextAlignVertical.center,
@@ -337,6 +349,10 @@ class _EventDetailState extends State<EventDetail> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    maxLines: 1,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(15),
+                    ],
                     controller: _member3,
                     autofocus: false,
                     textAlignVertical: TextAlignVertical.center,
@@ -372,6 +388,10 @@ class _EventDetailState extends State<EventDetail> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    maxLines: 1,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(15),
+                    ],
                     controller: _member4,
                     autofocus: false,
                     textAlignVertical: TextAlignVertical.center,
@@ -468,12 +488,25 @@ class _EventDetailState extends State<EventDetail> {
   Future<void> registerEvent(String userId, List<String> members, String name,
       String phoneNum, String email) async {
     final token = Provider.of<Auth>(context, listen: false).token;
-    final PayResponse? payRes =
-        await Provider.of<EventRegistrationProvider>(context, listen: false)
-            .registerEvent(userId, members, widget.model.mongoId, token);
-    if (payRes != null) {
-      await startPayment(payRes.id, payRes.amount.toString(), name,
-          'Template Desc', phoneNum, email);
+    try {
+      final PayResponse? payRes =
+          await Provider.of<EventRegistrationProvider>(context, listen: false)
+              .registerEvent(userId, members, widget.model.mongoId, token);
+      if (payRes != null) {
+        await startPayment(payRes.id, payRes.amount.toString(), name,
+            'Template Desc', phoneNum, email);
+      }
+    } on HttpException catch (error) {
+      showErrorFlush(
+        context: context,
+        message: error.toString(),
+      );
+    } catch (error) {
+      String errorMessage = 'Could not register, please try again!';
+      showErrorFlush(
+        context: context,
+        message: errorMessage,
+      );
     }
   }
 

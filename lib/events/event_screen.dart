@@ -130,9 +130,12 @@ class EventScreen extends StatelessWidget {
             width: 158.w,
             right: 0,
             // child: Container(color: Colors.greenAccent),
-            child: Image.asset(
-              imgUri,
-              fit: BoxFit.contain,
+            child: Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Image.asset(
+                imgUri,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           Positioned(

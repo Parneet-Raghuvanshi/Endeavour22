@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/drawermain/glimpses_provider.dart';
@@ -13,6 +14,7 @@ import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -69,23 +71,55 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       },
-                      child: Consumer<NotificationProvider>(
-                        builder: (context, value, child) => value.dotCount > 0
-                            ? Badge(
-                                child: child!,
-                                value: value.dotCount > 9
-                                    ? "9+"
-                                    : value.dotCount.toString())
-                            : child!,
-                        child: Container(
-                          margin: EdgeInsets.all(14.w),
-                          child: SvgPicture.asset(
-                            'assets/images/bell.svg',
-                            color: kLayer1Color,
-                          ),
+                      // child: Consumer<NotificationProvider>(
+                      //   builder: (context, value, child) => value.dotCount > 0
+                      //       ? Badge(
+                      //           child: child!,
+                      //           value: value.dotCount > 9
+                      //               ? "9+"
+                      //               : value.dotCount.toString())
+                      //       : child!,
+                      //
+                      // ),
+                      child: Container(
+                        margin: EdgeInsets.all(14.w),
+                        child: SvgPicture.asset(
+                          'assets/images/bell.svg',
+                          color: kLayer1Color,
                         ),
                       ),
                     ),
+                  ),
+                  Consumer<NotificationProvider>(
+                    builder: (context, value, _) => value.dotCount > 0
+                        ? Positioned(
+                            right: 16.w,
+                            top: 8.w + statusBar,
+                            child: Container(
+                              padding: const EdgeInsets.all(2.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: Colors.red,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 20,
+                                minHeight: 20,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  value.dotCount > 9
+                                      ? "9+"
+                                      : value.dotCount.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ),
                   Positioned(
                     top: 0 + statusBar,
@@ -368,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'name': userData.name,
           'subject': subject,
           'email': userData.email,
-          'content': message,
+          'message': message,
         }),
       );
       final responseData = json.decode(response.body);
@@ -379,14 +413,22 @@ class _HomeScreenState extends State<HomeScreen> {
       _subjectController.clear();
       _messageController.clear();
       // Form Send
-      showErrorFlush(
+      showNormalFlush(
         context: context,
         message: 'Contact Form Submitted Successfully!',
       );
+    } on HttpException catch (error) {
+      showErrorFlush(
+        context: context,
+        message: error.toString(),
+      );
     } catch (error) {
-      print(error.toString());
+      String errorMessage = 'Could not send form, please try again!';
+      showErrorFlush(
+        context: context,
+        message: errorMessage,
+      );
     }
-
     setState(() {
       _isLoading = false;
     });
@@ -398,15 +440,32 @@ class _HomeScreenState extends State<HomeScreen> {
         var widgets = <Widget>[];
         for (var element in value.glimpses) {
           widgets.add(
-            Container(
+            SizedBox(
               height: 274.w,
               width: 274.w,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(12),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(element),
+              // decoration: BoxDecoration(
+              //   borderRadius: const BorderRadius.all(
+              //     Radius.circular(12),
+              //   ),
+              //   // image: DecorationImage(
+              //   //   image: NetworkImage(element),
+              //   //   fit: BoxFit.cover,
+              //   // ),
+              //   //image: DecorationImage(image: CachedNetworkImage(imageUrl: element,)),
+              // ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => Center(
+                    child: Container(
+                      color: Colors.white60,
+                      child: SpinKitFadingCircle(
+                        color: Colors.grey,
+                        size: 36.h,
+                      ),
+                    ),
+                  ),
+                  imageUrl: element,
                   fit: BoxFit.cover,
                 ),
               ),

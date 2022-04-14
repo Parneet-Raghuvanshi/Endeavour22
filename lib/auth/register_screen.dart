@@ -1,9 +1,9 @@
 import 'package:endeavour22/auth/auth_provider.dart';
-import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -264,6 +264,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: 312.w,
                   height: 48.h,
                   child: TextField(
+                    maxLines: 1,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(10),
+                    ],
                     autofocus: false,
                     controller: _phoneNumberController,
                     textAlignVertical: TextAlignVertical.center,

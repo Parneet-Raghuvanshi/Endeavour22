@@ -143,7 +143,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4.h),
                 Text(
                   model.body,
                   style: TextStyle(
@@ -152,6 +151,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   textAlign: TextAlign.justify,
                 ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    model.date,
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12.sp,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
               ],
             ),
           ),
@@ -159,7 +168,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             margin: EdgeInsets.symmetric(horizontal: 16.w),
             color: Colors.black12,
             height: 1.h,
-          )
+          ),
         ],
       ),
     );

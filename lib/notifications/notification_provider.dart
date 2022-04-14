@@ -34,6 +34,9 @@ class NotificationProvider with ChangeNotifier {
           if (data.read == 'false') _dotCount++;
           return data;
         }).toList();
+        _notifications.sort(
+          (a, b) => (int.parse(a.id) > int.parse(b.id)) ? -1 : 1,
+        );
         _completed = true;
         notifyListeners();
       }
