@@ -6,12 +6,14 @@ import 'package:endeavour22/events/event_content_provider.dart';
 import 'package:endeavour22/events/event_model.dart';
 import 'package:endeavour22/events/event_registration_provider.dart';
 import 'package:endeavour22/events/faq_screen.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/helper/navigator.dart';
+import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:endeavour22/widgets/input_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +28,7 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
+  bool _loading = false;
   final _razorpay = Razorpay();
   bool isRegistered = false;
   @override
@@ -35,10 +38,13 @@ class _EventDetailState extends State<EventDetail> {
     for (Registered entry in registered) {
       if (entry.event == widget.model.mongoId) {
         isRegistered = true;
+        break;
       }
     }
-    // REFRESH USER DATA
-    refreshUserData();
+    if (!isRegistered) {
+      // REFRESH USER DATA
+      refreshUserData();
+    }
     Provider.of<EventContentProvider>(context, listen: false)
         .fetchData(widget.model.id);
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -48,6 +54,9 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   Future<void> refreshUserData() async {
+    setState(() {
+      _loading = true;
+    });
     final token = Provider.of<Auth>(context, listen: false).token;
     await Provider.of<Auth>(context, listen: false).fetchUserData(token);
     final registered =
@@ -55,8 +64,12 @@ class _EventDetailState extends State<EventDetail> {
     for (Registered entry in registered) {
       if (entry.event == widget.model.mongoId) {
         isRegistered = true;
+        break;
       }
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -104,8 +117,8 @@ class _EventDetailState extends State<EventDetail> {
                           tag: widget.model.eventId,
                           child: Image.network(
                             widget.model.imgUri,
-                            height: 54.w,
-                            width: 54.w,
+                            height: 64.w,
+                            width: 64.w,
                           ),
                         ),
                       ),
@@ -166,73 +179,34 @@ class _EventDetailState extends State<EventDetail> {
               ),
             ),
             if (details.isNotEmpty) buildDetailList(details),
-            if (isRegistered)
-              Center(
-                child: InkWell(
-                  onTap: () {
-                    // go to profile
-                    Navigator.of(context).push(
-                      SlideRightRoute(
-                        page: const ProfileView(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12, //New
-                          blurRadius: 10.0,
-                          offset: Offset(0.5, 0.5),
+            _loading
+                ? SizedBox(
+                    height: 36.h,
+                    child: Center(
+                      child: buildLoader(36.h),
+                    ),
+                  )
+                : isRegistered
+                    ? Center(
+                        child: InkWell(
+                          onTap: () {
+                            // go to profile
+                            Navigator.of(context).push(
+                              SlideRightRoute(
+                                page: const ProfileView(),
+                              ),
+                            );
+                          },
+                          child: buildButton(
+                              name: 'Registered', width: 184.w, isGreen: true),
                         ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    width: 196.w,
-                    height: 48.h,
-                    child: Text(
-                      'Registered',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            else
-              Center(
-                child: InkWell(
-                  onTap: showPopup,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10.0,
-                          offset: Offset(0.5, 0.5),
+                      )
+                    : Center(
+                        child: InkWell(
+                          onTap: showPopup,
+                          child: buildButton(name: 'Register', width: 184.w),
                         ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    width: 196.w,
-                    height: 48.h,
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.white,
                       ),
-                    ),
-                  ),
-                ),
-              ),
             SizedBox(height: 24.w),
           ],
         ),
@@ -255,173 +229,56 @@ class _EventDetailState extends State<EventDetail> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Center(child: Text('Enter Team Details!')),
+          title: const Center(
+              child: Text(
+            'Enter Team Details!',
+            style: TextStyle(color: kPrimaryMid),
+          )),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: TextField(
-                  maxLines: 1,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(15),
-                  ],
+              buildInputField(
                   controller: _member1..text = userData.endvrid,
-                  enabled: false,
-                  autofocus: false,
-                  textAlignVertical: TextAlignVertical.center,
-                  cursorColor: Colors.black,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16.sp,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Endeavour Id',
-                    hintStyle: const TextStyle(color: Colors.black),
-                    icon: SizedBox(
-                      width: 24.w,
-                      height: 24.w,
-                      child: Image.asset(
-                        'assets/images/user.png',
-                        color: Colors.black,
-                      ),
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
+                  name: 'Endeavour Id',
+                  icon: 'assets/images/user.png',
+                  width: 288.w,
+                  limit: 15,
+                  isMargin: false,
+                  isEnabled: false),
               if (memberCount > 1) SizedBox(height: 8.h),
               if (memberCount > 1)
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: TextField(
-                    maxLines: 1,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(15),
-                    ],
-                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                buildInputField(
                     controller: _member2,
-                    autofocus: false,
-                    textAlignVertical: TextAlignVertical.center,
-                    cursorColor: Colors.black,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Endeavour Id',
-                      hintStyle: const TextStyle(color: Colors.black),
-                      icon: SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: Image.asset(
-                          'assets/images/user.png',
-                          color: Colors.black,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
+                    name: 'Endeavour Id',
+                    icon: 'assets/images/user.png',
+                    width: 288.w,
+                    limit: 15,
+                    isMargin: false),
               if (memberCount > 2) SizedBox(height: 8.h),
               if (memberCount > 2)
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: TextField(
-                    maxLines: 1,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(15),
-                    ],
+                buildInputField(
                     controller: _member3,
-                    autofocus: false,
-                    textAlignVertical: TextAlignVertical.center,
-                    cursorColor: Colors.black,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Endeavour Id',
-                      hintStyle: const TextStyle(color: Colors.black),
-                      icon: SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: Image.asset(
-                          'assets/images/user.png',
-                          color: Colors.black,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
+                    name: 'Endeavour Id',
+                    icon: 'assets/images/user.png',
+                    width: 288.w,
+                    limit: 15,
+                    isMargin: false),
               if (memberCount > 3) SizedBox(height: 8.h),
               if (memberCount > 3)
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: TextField(
-                    maxLines: 1,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(15),
-                    ],
+                buildInputField(
                     controller: _member4,
-                    autofocus: false,
-                    textAlignVertical: TextAlignVertical.center,
-                    cursorColor: Colors.black,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Endeavour Id',
-                      hintStyle: const TextStyle(color: Colors.black),
-                      icon: SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: Image.asset(
-                          'assets/images/user.png',
-                          color: Colors.black,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
+                    name: 'Endeavour Id',
+                    icon: 'assets/images/user.png',
+                    width: 288.w,
+                    limit: 15,
+                    isMargin: false),
               SizedBox(height: 16.h),
               Center(
                 child: _isLoading
                     ? SizedBox(
                         height: 48.h,
                         child: Center(
-                          child: CustomLoader().buildLoader(),
+                          child: buildLoader(48.h),
                         ),
                       )
                     : InkWell(
@@ -452,30 +309,7 @@ class _EventDetailState extends State<EventDetail> {
                             _isLoading = false;
                           });
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12, //New
-                                blurRadius: 10.0,
-                                offset: Offset(0.5, 0.5),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          width: 196.w,
-                          height: 48.h,
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        child: buildButton(name: 'Continue', width: 184.w),
                       ),
               ),
             ],
@@ -532,6 +366,8 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    // Update User Data...
+    refreshUserData();
     // Do something when payment succeeds
     print("Payment Success " +
         response.paymentId.toString() +
@@ -655,47 +491,13 @@ class _EventDetailState extends State<EventDetail> {
                   // Finish the Popup
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12, //New
-                        blurRadius: 10.0,
-                        offset: Offset(0.5, 0.5),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  width: 124.w,
-                  height: 36.h,
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                child: buildButton(name: 'Continue', width: 124.w),
               ),
             ),
           ],
         ),
       ),
     );
-    // Update User Data...
-    final token = Provider.of<Auth>(context, listen: false).token;
-    await Provider.of<Auth>(context, listen: false).fetchUserData(token);
-    // Re-Check Event Status...
-    final registered =
-        Provider.of<Auth>(context, listen: false).userModel!.registered;
-    for (Registered entry in registered) {
-      if (entry.event == widget.model.mongoId) {
-        isRegistered = true;
-      }
-    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -785,30 +587,7 @@ class _EventDetailState extends State<EventDetail> {
                   // Finish the Popup
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12, //New
-                        blurRadius: 10.0,
-                        offset: Offset(0.5, 0.5),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  width: 124.w,
-                  height: 36.h,
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                child: buildButton(name: 'Continue', width: 124.w),
               ),
             ),
           ],
@@ -901,30 +680,7 @@ class _EventDetailState extends State<EventDetail> {
                   // Finish the Popup
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12, //New
-                        blurRadius: 10.0,
-                        offset: Offset(0.5, 0.5),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  width: 124.w,
-                  height: 36.h,
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                child: buildButton(name: 'Continue', width: 124.w),
               ),
             ),
           ],

@@ -94,14 +94,14 @@ class EventScreen extends StatelessWidget {
   Widget buildEventList(BuildContext context, String eventType,
       String eventTypeTag, String imgUri, List<EventModel> data) {
     return SizedBox(
-      height: 260.w,
+      height: 244.w,
       width: 360.w,
       child: Stack(
         children: [
           Positioned(
-            height: 100.w,
+            height: 84.w,
             width: 186.w,
-            left: 16.w,
+            left: 26.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class EventScreen extends StatelessWidget {
                 Text(
                   eventType,
                   style: TextStyle(
-                    fontSize: 18.sp,
+                    fontSize: 20.sp,
                     color: Colors.black,
                   ),
                 ),
@@ -121,20 +121,19 @@ class EventScreen extends StatelessWidget {
                     color: Colors.black54,
                   ),
                 ),
-                SizedBox(height: 16.w),
               ],
             ),
           ),
           Positioned(
-            height: 100.w,
+            height: 84.w,
             width: 158.w,
             right: 0,
-            // child: Container(color: Colors.greenAccent),
-            child: Padding(
-              padding: EdgeInsets.all(12.w),
+            child: Container(
+              alignment: Alignment.bottomCenter,
               child: Image.asset(
                 imgUri,
                 fit: BoxFit.contain,
+                height: 64.w,
               ),
             ),
           ),
@@ -154,14 +153,20 @@ class EventScreen extends StatelessWidget {
     for (EventModel model in data) {
       widgets.add(buildEventCard(context, model));
     }
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 12.w,
-          ),
-          child: Row(children: widgets)),
-    );
+    if (widgets.length == 1) {
+      return Center(
+        child: widgets[0],
+      );
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+            ),
+            child: Row(children: widgets)),
+      );
+    }
   }
 
   Widget buildEventCard(BuildContext context, EventModel model) {
@@ -187,7 +192,7 @@ class EventScreen extends StatelessWidget {
           ],
         ),
         margin: EdgeInsets.symmetric(
-          vertical: 16.w,
+          vertical: 12.w,
           horizontal: 6.w,
         ),
         height: 128.w,
@@ -204,7 +209,7 @@ class EventScreen extends StatelessWidget {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  color: kLayer1Color,
+                  color: kPrimaryMid,
                   child: Text(
                     model.name,
                     overflow: TextOverflow.ellipsis,

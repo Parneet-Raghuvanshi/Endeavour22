@@ -1,5 +1,5 @@
 import 'package:endeavour22/auth/auth_provider.dart';
-import 'package:endeavour22/auth/login_screen.dart';
+import 'package:endeavour22/auth/auth_screen.dart';
 import 'package:endeavour22/auth/profile_screen.dart';
 import 'package:endeavour22/drawermain/glimpses_provider.dart';
 import 'package:endeavour22/drawermain/mian_screen.dart';
@@ -33,7 +33,7 @@ Future<void> backGroundHandler(RemoteMessage message) async {
     var userId = await storage.read(key: 'userId');
     await Firebase.initializeApp();
     var now = DateTime.now();
-    var formatter = DateFormat('dd-MM-yyyy');
+    var formatter = DateFormat.yMMMMd('en_US');
     String formattedDate = formatter.format(now);
     int id = DateTimeStamp().getDate();
     var model = NotificationModel(
@@ -142,7 +142,7 @@ class MyApp extends StatelessWidget {
             initialRoute: '/',
             routes: {
               '/': (contextMain) => AuthWrapper(auth: auth),
-              //'/': (contextMain) => const SplashScreen(),
+              //'/': (contextMain) => const ProfileScreen(isUpdate: false),
             },
           ),
         ),
@@ -180,7 +180,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         var userId = await storage.read(key: 'userId');
         await Firebase.initializeApp();
         var now = DateTime.now();
-        var formatter = DateFormat('dd-MM-yyyy');
+        var formatter = DateFormat.yMMMMd('en_US');
         String formattedDate = formatter.format(now);
         int id = DateTimeStamp().getDate();
         var model = NotificationModel(
@@ -234,7 +234,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
             builder: (ctx, authResultSnapshot) =>
                 authResultSnapshot.connectionState == ConnectionState.waiting
                     ? const SplashScreen()
-                    : const LoginScreen(),
+                    : const AuthScreen(),
           );
   }
 }

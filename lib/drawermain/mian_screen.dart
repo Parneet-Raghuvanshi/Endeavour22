@@ -56,24 +56,19 @@ class _MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        //backgroundColor: const Color(0XFFF1F0E8),
         body: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              kLayer1Color,
-              kLayer6Color,
-            ],
-          )),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                kPrimaryLight,
+                kPrimaryDark,
+              ],
+            ),
+          ),
           child: Stack(
             children: [
-              // SvgPicture.asset(
-              //   'assets/images/greenback.svg',
-              //   height: 640.h,
-              //   fit: BoxFit.fitHeight,
-              // ),
               buildDrawer(),
               buildPage(),
             ],
@@ -112,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Text(
                             'No',
                             style: TextStyle(
-                              color: kLayer6Color,
+                              color: kPrimaryMid,
                               fontSize: 16.sp,
                             ),
                           ),
@@ -129,7 +124,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Text(
                             'Yes',
                             style: TextStyle(
-                              color: kLayer6Color,
+                              color: kPrimaryMid,
                               fontSize: 16.sp,
                             ),
                           ),
@@ -214,13 +209,15 @@ class _MainScreenState extends State<MainScreen> {
       closeDrawer();
       return Future.value(false);
     }
+    if (item != DrawerItems.home) {
+      setState(() {
+        item = DrawerItems.home;
+      });
+      return Future.value(false);
+    }
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 3)) {
       currentBackPressTime = now;
-      // showNormalFlush(
-      //   context: context,
-      //   message: 'Press back again to exit the application!',
-      // );
       const snackBar = SnackBar(
         content: Text('Press back again to exit the application!'),
         duration: Duration(seconds: 3),

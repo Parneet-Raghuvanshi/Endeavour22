@@ -236,17 +236,6 @@ class BottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     child: Container(
-            //       height: 5.0,
-            //       width: 40.0,
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 16.w),
             Text(
               'Developed by',

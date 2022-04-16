@@ -70,7 +70,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ? value.completed
                         ? noNewNotifications()
                         : Center(
-                            child: CustomLoader().buildLoader(),
+                            child: buildLoader(48.h),
                           )
                     : ListView.builder(
                         padding: EdgeInsets.zero,
@@ -131,7 +131,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         children: [
           ListTile(
             contentPadding:
-                EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.w),
+                EdgeInsets.only(left: 24.w, right: 24.w, top: 8.w, bottom: 2.w),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -143,6 +143,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(height: 2.w),
                 Text(
                   model.body,
                   style: TextStyle(
@@ -151,6 +152,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   textAlign: TextAlign.justify,
                 ),
+                SizedBox(height: 2.w),
                 Container(
                   alignment: Alignment.centerRight,
                   child: Text(

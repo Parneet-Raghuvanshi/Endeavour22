@@ -1,12 +1,13 @@
 import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/auth/user_model.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
+import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:endeavour22/widgets/input_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -131,269 +132,156 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final double statusBar = MediaQuery.of(context).padding.top;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            SvgPicture.asset(
-              'assets/images/greenback.svg',
-              height: 640.h,
+    return Stack(
+      children: [
+        Positioned(
+          width: 1600.w,
+          height: 640.h,
+          left: -360.w,
+          child: Container(
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/images/moon_back.jpg',
               fit: BoxFit.fitHeight,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 64.h + statusBar),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 26.w),
-                  child: Text(
-                    widget.isUpdate
-                        ? 'Please\nupdate your\nprofile!'
-                        : 'Just one\nmore step\nto go!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: widget.isUpdate ? 36.h : 70.h),
-                if (widget.isUpdate)
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 26.w),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    width: 312.w,
-                    height: 48.h,
-                    child: TextField(
-                      autofocus: false,
-                      controller: _nameController,
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Colors.white,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.sp,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Full Name',
-                        hintStyle: const TextStyle(color: Colors.white),
-                        icon: SizedBox(
-                          width: 24.w,
-                          height: 24.w,
-                          child: Image.asset(
-                            'assets/images/user.png',
-                            color: Colors.white,
-                          ),
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                SizedBox(height: 16.h),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 26.w),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  width: 312.w,
-                  height: 48.h,
-                  child: TextField(
-                    autofocus: false,
-                    controller: _clgNameController,
-                    textAlignVertical: TextAlignVertical.center,
-                    cursorColor: Colors.white,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'College Name',
-                      hintStyle: const TextStyle(color: Colors.white),
-                      icon: SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: Image.asset(
-                          'assets/images/college.png',
-                          color: Colors.white,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 26.w),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(left: 16.w),
-                  width: 312.w,
-                  height: 48.h,
-                  child: TextField(
-                    autofocus: false,
-                    controller: _clgIdController,
-                    textAlignVertical: TextAlignVertical.center,
-                    cursorColor: Colors.white,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'College Id',
-                      hintStyle: const TextStyle(color: Colors.white),
-                      icon: SizedBox(
-                        width: 24.w,
-                        height: 24.w,
-                        child: Image.asset(
-                          'assets/images/clgid.png',
-                          color: Colors.white,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      width: 146.w,
-                      height: 48.h,
-                      child: TextField(
-                        autofocus: false,
-                        controller: _branchController,
-                        textAlignVertical: TextAlignVertical.center,
-                        cursorColor: Colors.white,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Branch',
-                          hintStyle: const TextStyle(color: Colors.white),
-                          icon: SizedBox(
-                            width: 24.w,
-                            height: 24.w,
-                            child: Image.asset(
-                              'assets/images/branch.png',
-                              color: Colors.white,
-                            ),
-                          ),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      width: 146.w,
-                      height: 48.h,
-                      child: TextField(
-                        maxLines: 1,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        autofocus: false,
-                        controller: _semController,
-                        textAlignVertical: TextAlignVertical.center,
-                        cursorColor: Colors.white,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Sem',
-                          hintStyle: const TextStyle(color: Colors.white),
-                          icon: SizedBox(
-                            width: 24.w,
-                            height: 24.w,
-                            child: Image.asset(
-                              'assets/images/sem.png',
-                              color: Colors.white,
-                            ),
-                          ),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
+          ),
+        ),
+        Positioned(
+          child: Opacity(
+            opacity: 0.4,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    kPrimaryLight,
+                    kPrimaryDark,
                   ],
                 ),
-                SizedBox(height: 58.h),
-                Center(
-                  child: _isLoading
-                      ? SizedBox(
-                          height: 48.h,
-                          child: Center(
-                            child: CustomLoader().buildLoader(),
-                          ),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            _submit();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12, //New
-                                  blurRadius: 10.0,
-                                  offset: Offset(0.5, 0.5),
-                                ),
-                              ],
-                            ),
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            width: 196.w,
-                            height: 48.h,
-                            child: Text(
-                              widget.isUpdate ? 'Save' : 'Continue',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+              ),
+            ),
+          ),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(top: statusBar),
+              alignment: Alignment.center,
+              height: 640.h,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: widget.isUpdate ? 76.h : 108.h,
+                    left: 26.w,
+                    child: Text(
+                      widget.isUpdate
+                          ? 'Please\nupdate your\nprofile!'
+                          : 'Just one\nmore step\nto go!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  buildUpdate(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildUpdate() {
+    return Positioned(
+      width: 360.w,
+      bottom: 16.h,
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 24.w),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12, //New
+                  blurRadius: 10.0,
+                  offset: Offset(0.5, 0.5),
                 ),
               ],
             ),
-          ],
-        ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 18.h),
+                Text(
+                  'Continue with Credentials!',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: kPrimaryMid,
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                if (widget.isUpdate)
+                  buildInputField(
+                      controller: _nameController,
+                      name: 'Full Name',
+                      icon: 'assets/images/user.png',
+                      width: 288.w),
+                if (widget.isUpdate) SizedBox(height: 12.h),
+                buildInputField(
+                    controller: _clgNameController,
+                    name: 'College Name',
+                    icon: 'assets/images/college.png',
+                    width: 288.w),
+                SizedBox(height: 12.h),
+                buildInputField(
+                    controller: _clgIdController,
+                    name: 'College Id',
+                    icon: 'assets/images/clgid.png',
+                    width: 288.w),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildInputField(
+                        controller: _branchController,
+                        name: 'Branch',
+                        icon: 'assets/images/branch.png',
+                        width: 124.w),
+                    buildInputField(
+                        controller: _semController,
+                        name: 'Sem',
+                        icon: 'assets/images/sem.png',
+                        width: 124.w,
+                        limit: 1),
+                  ],
+                ),
+                SizedBox(height: 24.h),
+                _isLoading
+                    ? SizedBox(
+                        height: 36.h,
+                        child: Center(
+                          child: buildLoader(36.h),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: _submit,
+                        child: buildButton(
+                            name: widget.isUpdate ? 'Save' : 'Finish',
+                            width: 184.w),
+                      ),
+                SizedBox(height: 16.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 24.h),
+        ],
       ),
     );
   }

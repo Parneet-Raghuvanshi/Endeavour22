@@ -78,23 +78,29 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   TabBar(
                     physics: const NeverScrollableScrollPhysics(),
                     controller: _appTitleController,
-                    indicatorColor: kLayer6Color,
-                    labelColor: kLayer6Color,
+                    indicatorColor: kPrimaryDark,
+                    labelColor: kPrimaryDark,
                     unselectedLabelColor: Colors.black26,
                     isScrollable: false,
                     tabs: [
                       SizedBox(
                         height: 34.h,
                         width: yourWidth,
-                        child: const Tab(
-                          text: 'Day One',
+                        child: Tab(
+                          child: Text(
+                            'Day One',
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 34.h,
                         width: yourWidth,
-                        child: const Tab(
-                          text: 'Day Two',
+                        child: Tab(
+                          child: Text(
+                            'Day Two',
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
                         ),
                       ),
                     ],
@@ -127,7 +133,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           ? value.completedOne
               ? comingSoon()
               : Center(
-                  child: CustomLoader().buildLoader(),
+                  child: buildLoader(48.h),
                 )
           : ListView.builder(
               padding: EdgeInsets.zero,
@@ -144,7 +150,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           ? value.completedTwo
               ? comingSoon()
               : Center(
-                  child: CustomLoader().buildLoader(),
+                  child: buildLoader(48.h),
                 )
           : ListView.builder(
               padding: EdgeInsets.zero,
@@ -166,7 +172,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             height: 124.w,
             width: 8.w,
             child: Container(
-              color: index % 2 == 0 ? kLayer1Color : kLayer5Color,
+              color: index % 2 == 0 ? kPrimaryLight : kPrimaryMid,
             ),
           ),
           Positioned(

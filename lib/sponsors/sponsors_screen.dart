@@ -61,7 +61,7 @@ class SponsorsScreen extends StatelessWidget {
                   child: value.allSponsors.isEmpty
                       ? value.completed
                           ? comingSoon()
-                          : Center(child: CustomLoader().buildLoader())
+                          : Center(child: buildLoader(48.h))
                       : StaggeredGridView.countBuilder(
                           padding: EdgeInsets.zero,
                           staggeredTileBuilder: (index) => StaggeredTile.count(
@@ -143,17 +143,6 @@ class BottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     child: Container(
-            //       height: 5.0,
-            //       width: 40.0,
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 16.w),
             Text(
               data.name,

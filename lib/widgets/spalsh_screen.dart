@@ -14,8 +14,8 @@ class SplashScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              kLayer1Color,
-              kLayer6Color,
+              kPrimaryLight,
+              kPrimaryDark,
             ],
           ),
         ),
@@ -27,12 +27,6 @@ class SplashScreen extends StatelessWidget {
                 'assets/images/logo.png',
                 height: 96.h,
               ),
-              // Lottie.asset(
-              //   'assets/lottie/dark_load.json',
-              //   height: 120.w,
-              //   width: 160.w,
-              //   repeat: true,
-              // ),
             ],
           ),
         ),

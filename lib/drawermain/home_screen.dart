@@ -9,13 +9,16 @@ import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/notifications/badge.dart';
 import 'package:endeavour22/notifications/notification_provider.dart';
 import 'package:endeavour22/notifications/notification_screen.dart';
+import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:endeavour22/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gif_view/gif_view.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,16 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             SizedBox(
+              width: 360.w,
               height: 328.h + statusBar,
               child: Stack(
                 children: [
-                  // Positioned(
-                  //   child: SvgPicture.asset(
-                  //     'assets/images/greenback.svg',
-                  //     height: 640.h,
-                  //     fit: BoxFit.fitHeight,
-                  //   ),
-                  // ),
+                  Positioned(
+                    child: GifView.asset(
+                      'assets/images/main_final.gif',
+                      fit: BoxFit.cover,
+                      frameRate: 15,
+                    ),
+                    height: 328.h + statusBar,
+                    width: 360.w,
+                  ),
                   Positioned(
                     top: 0 + statusBar,
                     right: 8.w,
@@ -71,21 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       },
-                      // child: Consumer<NotificationProvider>(
-                      //   builder: (context, value, child) => value.dotCount > 0
-                      //       ? Badge(
-                      //           child: child!,
-                      //           value: value.dotCount > 9
-                      //               ? "9+"
-                      //               : value.dotCount.toString())
-                      //       : child!,
-                      //
-                      // ),
                       child: Container(
-                        margin: EdgeInsets.all(14.w),
+                        margin: EdgeInsets.all(16.w),
                         child: SvgPicture.asset(
                           'assets/images/bell.svg',
-                          color: kLayer1Color,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -129,30 +125,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: InkWell(
                       onTap: widget.openDrawer,
                       child: Container(
-                        margin: EdgeInsets.all(14.w),
+                        margin: EdgeInsets.all(16.w),
                         child: SvgPicture.asset(
                           'assets/images/hamburger.svg',
-                          color: kLayer1Color,
+                          color: Colors.white,
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: SizedBox(
-                      width: 240.h,
-                      height: 220.h,
-                      child: SvgPicture.asset(
-                        'assets/images/color-scheme-right.svg',
-                        color: kLayer1Color,
-                      ),
-                    ),
-                  ),
-                  Positioned(
                     left: 36.w,
-                    top: 80.h + statusBar,
+                    bottom: 36.h,
+                    //top: 124.h + statusBar,
                     child: Column(
                       children: [
                         Image.asset(
@@ -163,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           "Endeavour\n2021-22",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: kLayer1Color,
+                            color: Colors.white,
                             fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                           ),
@@ -197,10 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: 16.h,
               ),
               child: Text(
-                "Pichai Sundararajan, better known for me a Sundar Pichai, is an Indian-born help you business executive. He is the. Pichai here to Sundararajan, better known the known off Sundar Pichai, is an Indian-born to the time business executive.",
-                textAlign: TextAlign.start,
+                "Endeavour is an annual Entrepreneurship Summit of KIET, Ghaziabad that brings a golden opportunity for budding entrepreneurs as well as for the tech-savvies to showcase flair. Our annual Techno-Entrepreneurial Summit, recognized as Endeavour, was initiated in 2015 and the rich legacy has been carried on for the past 6 years. It is a platform where experience, learnings, inspiration, and ideas converge to make it once in a lifetime experience for everyone. It comprises technical, corporate, and other thrilling events along with encouraging speeches by highly illustrious speakers and entrepreneurs. The event is organized at an inter-college level, so the main intention of the event is to foster an entrepreneurial culture among the participants and to introduce them to the corporate world. Thus, they have a good window of opportunities to explore and win numerous prizes, gift hampers, and goodies!",
+                textAlign: TextAlign.justify,
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: 14.sp,
                 ),
               ),
             ),
@@ -249,34 +234,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 8.w),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 26.w),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              width: 312.w,
-              height: 48.h,
-              child: TextField(
+            buildInputField(
                 controller: _subjectController,
-                autofocus: false,
-                textAlignVertical: TextAlignVertical.center,
-                cursorColor: Colors.black,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.sp,
-                ),
-                decoration: const InputDecoration(
-                  hintText: 'Specify your subject...',
-                  hintStyle: TextStyle(color: Colors.black54),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+                name: 'Specify your subject...',
+                icon: 'assets/images/user.png',
+                width: 318.w,
+                hideIcon: true),
             SizedBox(height: 8.h),
             Container(
               alignment: Alignment.centerLeft,
@@ -292,70 +255,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 8.w),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 26.w),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              width: 312.w,
-              height: 96.h,
-              child: TextField(
+            buildInputField(
                 controller: _messageController,
+                name: 'How we can help you...',
+                icon: 'assets/images/user.png',
+                width: 318.w,
                 maxLines: 4,
-                autofocus: false,
-                textAlignVertical: TextAlignVertical.top,
-                cursorColor: Colors.black,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.sp,
-                ),
-                decoration: const InputDecoration(
-                  hintText: 'How we can help you...',
-                  hintStyle: TextStyle(color: Colors.black54),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+                height: 96.h,
+                hideIcon: true),
             SizedBox(height: 16.h),
             Center(
               child: _isLoading
                   ? SizedBox(
                       height: 48.h,
                       child: Center(
-                        child: CustomLoader().buildLoader(),
+                        child: buildLoader(48.h),
                       ),
                     )
                   : InkWell(
                       onTap: submitContactUs,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12, //New
-                              blurRadius: 10.0,
-                              offset: Offset(0.5, 0.5),
-                            ),
-                          ],
-                        ),
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        width: 196.w,
-                        height: 48.h,
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      child: buildButton(name: 'Submit', width: 184.w),
                     ),
             ),
             SizedBox(height: 16.h),
@@ -443,22 +362,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 274.w,
               width: 274.w,
-              // decoration: BoxDecoration(
-              //   borderRadius: const BorderRadius.all(
-              //     Radius.circular(12),
-              //   ),
-              //   // image: DecorationImage(
-              //   //   image: NetworkImage(element),
-              //   //   fit: BoxFit.cover,
-              //   // ),
-              //   //image: DecorationImage(image: CachedNetworkImage(imageUrl: element,)),
-              // ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
                 child: CachedNetworkImage(
                   placeholder: (context, url) => Center(
                     child: Container(
-                      color: Colors.white60,
+                      color: Colors.white,
                       child: SpinKitFadingCircle(
                         color: Colors.grey,
                         size: 36.h,

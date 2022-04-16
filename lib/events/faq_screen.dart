@@ -58,7 +58,7 @@ class FaqScreen extends StatelessWidget {
                 ),
                 child: FirebaseAnimatedList(
                   defaultChild: Center(
-                    child: CustomLoader().buildLoader(),
+                    child: buildLoader(48.h),
                   ),
                   query: _eventFaqDB,
                   itemBuilder: (BuildContext context, DataSnapshot snapshot,

@@ -4,8 +4,6 @@ import 'package:endeavour22/team/team_provider.dart';
 import 'package:endeavour22/team/team_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -61,7 +59,7 @@ class TeamScreen extends StatelessWidget {
                     ? value.completed
                         ? comingSoon()
                         : Center(
-                            child: CustomLoader().buildLoader(),
+                            child: buildLoader(48.h),
                           )
                     : ListView.builder(
                         padding: EdgeInsets.zero,
@@ -95,15 +93,16 @@ class TeamScreen extends StatelessWidget {
       },
       child: Container(
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12, //New
-                blurRadius: 10.0,
-                offset: Offset(0.5, 0.5),
-              ),
-            ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12, //New
+              blurRadius: 10.0,
+              offset: Offset(0.5, 0.5),
+            ),
+          ],
+        ),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
         height: 84.h,
         width: 328.w,
@@ -158,7 +157,7 @@ class TeamScreen extends StatelessWidget {
                   bottomRight: Radius.circular(8),
                 ),
                 child: Container(
-                  color: kLayer1Color,
+                  color: kPrimaryMid,
                   alignment: Alignment.center,
                   child: Text(
                     data.domain,
@@ -205,17 +204,6 @@ class BottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     child: Container(
-            //       height: 5.0,
-            //       width: 40.0,
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 16.w),
             Text(
               data.name,

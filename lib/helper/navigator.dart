@@ -20,7 +20,7 @@ class SlideLeftRoute extends PageRouteBuilder {
             position: Tween<Offset>(
               begin: const Offset(1, 0),
               end: Offset.zero,
-            ).animate(animation),
+            ).chain(CurveTween(curve: Curves.ease)).animate(animation),
             child: child,
           ),
         );
@@ -46,7 +46,7 @@ class SlideRightRoute extends PageRouteBuilder {
             position: Tween<Offset>(
               begin: const Offset(-1, 0),
               end: Offset.zero,
-            ).animate(animation),
+            ).chain(CurveTween(curve: Curves.ease)).animate(animation),
             child: child,
           ),
         );

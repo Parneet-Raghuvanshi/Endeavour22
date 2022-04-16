@@ -59,7 +59,7 @@ class SpeakersScreen extends StatelessWidget {
                     ? value.completed
                         ? comingSoon()
                         : Center(
-                            child: CustomLoader().buildLoader(),
+                            child: buildLoader(48.h),
                           )
                     : ListView.builder(
                         padding: EdgeInsets.zero,
@@ -177,7 +177,7 @@ class SpeakersScreen extends StatelessWidget {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  color: kLayer1Color,
+                  color: kPrimaryMid,
                   child: RotatedBox(
                     quarterTurns: 3,
                     child: Text(
@@ -216,17 +216,6 @@ class BottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     child: Container(
-            //       height: 5.0,
-            //       width: 40.0,
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 16.w),
             Text(
               data.name.replaceAll('\n', ' '),

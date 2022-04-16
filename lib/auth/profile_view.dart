@@ -4,8 +4,10 @@ import 'package:endeavour22/auth/user_model.dart';
 import 'package:endeavour22/events/regietered_model.dart';
 import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
+import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:endeavour22/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -73,7 +75,15 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   ),
                   decoration: const BoxDecoration(
-                    color: kLayer1Color,
+                    //color: kLayer1Color,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        kPrimaryLight,
+                        kPrimaryMid,
+                      ],
+                    ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -133,231 +143,8 @@ class _ProfileViewState extends State<ProfileView> {
             SizedBox(height: 8.w),
             Center(
               child: InkWell(
-                onTap: () {
-                  // Change Password Request
-                  bool _isLoading = false;
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => StatefulBuilder(
-                      builder: (contextBuilder, setState) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        title: Text(
-                          'Change Password',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            color: Colors.black,
-                          ),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              color: Colors.black26,
-                              height: 1.w,
-                            ),
-                            SizedBox(height: 16.w),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.black,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.only(left: 16.w),
-                              width: 312.w,
-                              height: 48.h,
-                              child: TextField(
-                                keyboardType: TextInputType.visiblePassword,
-                                controller: _oldPass,
-                                autofocus: false,
-                                textAlignVertical: TextAlignVertical.center,
-                                cursorColor: Colors.black,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.sp,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: 'Old Password',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black),
-                                  icon: SizedBox(
-                                    width: 24.w,
-                                    height: 24.w,
-                                    child: Image.asset(
-                                      'assets/images/pass.png',
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16.w),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.black,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.only(left: 16.w),
-                              width: 312.w,
-                              height: 48.h,
-                              child: TextField(
-                                keyboardType: TextInputType.visiblePassword,
-                                controller: _newPass,
-                                autofocus: false,
-                                textAlignVertical: TextAlignVertical.center,
-                                cursorColor: Colors.black,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.sp,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: 'New Password',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black),
-                                  icon: SizedBox(
-                                    width: 24.w,
-                                    height: 24.w,
-                                    child: Image.asset(
-                                      'assets/images/pass.png',
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16.w),
-                            Center(
-                              child: _isLoading
-                                  ? SizedBox(
-                                      height: 36.h,
-                                      child: Center(
-                                        child: CustomLoader().buildLoader(),
-                                      ),
-                                    )
-                                  : InkWell(
-                                      onTap: () async {
-                                        //Navigator.of(context).pop();
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        // send request for change password...
-                                        final newPass = _newPass.text.trim();
-                                        final oldPass = _oldPass.text.trim();
-
-                                        if (oldPass.isEmpty) {
-                                          showErrorFlush(
-                                            context: context,
-                                            message: 'Old password is empty!',
-                                          );
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                          return;
-                                        } else if (newPass.isEmpty) {
-                                          showErrorFlush(
-                                            context: context,
-                                            message: 'New password is empty!',
-                                          );
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                          return;
-                                        }
-                                        // now send request
-                                        try {
-                                          await Provider.of<Auth>(context,
-                                                  listen: false)
-                                              .changePassword(
-                                            oldPass,
-                                            newPass,
-                                            context,
-                                          );
-                                          _newPass.clear();
-                                          _oldPass.clear();
-                                        } on HttpException catch (error) {
-                                          showErrorFlush(
-                                            context: context,
-                                            message: error.toString(),
-                                          );
-                                        } catch (error) {
-                                          String errorMessage =
-                                              'Could not Change Password, please try again!';
-                                          showErrorFlush(
-                                            context: context,
-                                            message: errorMessage,
-                                          );
-                                        }
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black12, //New
-                                              blurRadius: 10.0,
-                                              offset: Offset(0.5, 0.5),
-                                            ),
-                                          ],
-                                        ),
-                                        alignment: Alignment.center,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w),
-                                        width: 124.w,
-                                        height: 36.h,
-                                        child: Text(
-                                          'Update',
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12, //New
-                        blurRadius: 10.0,
-                        offset: Offset(0.5, 0.5),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  width: 196.w,
-                  height: 32.h,
-                  child: Text(
-                    'Change Password',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                onTap: changePasswordCall,
+                child: buildButton(name: 'ChangePassword', width: 184.w),
               ),
             ),
             SizedBox(height: 16.h),
@@ -512,6 +299,121 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  Future<void> changePasswordCall() async {
+    bool _isLoading = false;
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (contextBuilder, setState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Change Password',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.sp,
+              color: kPrimaryMid,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Container(
+              //   color: Colors.black26,
+              //   height: 1.w,
+              // ),
+              // SizedBox(height: 16.w),
+              buildInputField(
+                  controller: _oldPass,
+                  name: 'Old Password',
+                  icon: 'assets/images/pass.png',
+                  width: 288.w,
+                  isObs: true,
+                  isMargin: false),
+              SizedBox(height: 12.w),
+              buildInputField(
+                  controller: _newPass,
+                  name: 'New Password',
+                  icon: 'assets/images/pass.png',
+                  width: 288.w,
+                  isObs: true,
+                  isMargin: false),
+              SizedBox(height: 16.w),
+              Center(
+                child: _isLoading
+                    ? SizedBox(
+                        height: 36.h,
+                        child: Center(
+                          child: buildLoader(36.h),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () async {
+                          //Navigator.of(context).pop();
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          // send request for change password...
+                          final newPass = _newPass.text.trim();
+                          final oldPass = _oldPass.text.trim();
+
+                          if (oldPass.isEmpty) {
+                            showErrorFlush(
+                              context: context,
+                              message: 'Old password is empty!',
+                            );
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            return;
+                          } else if (newPass.isEmpty) {
+                            showErrorFlush(
+                              context: context,
+                              message: 'New password is empty!',
+                            );
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            return;
+                          }
+                          // now send request
+                          try {
+                            await Provider.of<Auth>(context, listen: false)
+                                .changePassword(
+                              oldPass,
+                              newPass,
+                              context,
+                            );
+                            _newPass.clear();
+                            _oldPass.clear();
+                          } on HttpException catch (error) {
+                            showErrorFlush(
+                              context: context,
+                              message: error.toString(),
+                            );
+                          } catch (error) {
+                            String errorMessage =
+                                'Could not Change Password, please try again!';
+                            showErrorFlush(
+                              context: context,
+                              message: errorMessage,
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        },
+                        child: buildButton(name: 'Update', width: 124.w),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildRegisteredTile(RegisteredModel model, BuildContext context) {
     return InkWell(
       onTap: () {
@@ -567,17 +469,6 @@ class BottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     child: Container(
-            //       height: 5.0,
-            //       width: 40.0,
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
             SizedBox(height: 16.w),
             Text(
               model.eventName,
@@ -597,7 +488,6 @@ class BottomSheet extends StatelessWidget {
               color: Colors.black26,
               height: 1.w,
             ),
-
             SizedBox(height: 16.w),
             Container(
                 //margin: EdgeInsets.symmetric(horizontal: 16.w),
@@ -638,10 +528,6 @@ class BottomSheet extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Text(
-                  //   'Leader',
-                  //   style: TextStyle(fontSize: 16.sp, color: Colors.green),
-                  // ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.green,
@@ -656,8 +542,8 @@ class BottomSheet extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    width: 100.w,
-                    height: 24.h,
+                    width: 96.w,
+                    height: 26.h,
                     child: Text(
                       'Leader',
                       style: TextStyle(
