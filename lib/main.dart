@@ -149,8 +149,7 @@ class MyApp extends StatelessWidget {
             ),
             initialRoute: '/',
             routes: {
-              //'/': (contextMain) => AuthWrapper(auth: auth),
-              '/': (contextMain) => const SplashScreen(),
+              '/': (contextMain) => AuthWrapper(auth: auth),
             },
           ),
         ),
