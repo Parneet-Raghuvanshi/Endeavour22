@@ -353,7 +353,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         onTap: forgotPass,
                         child: Text(
                           'Forgot Password?',
-                          style: TextStyle(fontSize: 14.sp, color: kPrimaryMid),
+                          style: TextStyle(fontSize: 16.sp, color: kPrimaryMid),
                         ),
                       ),
                       SizedBox(height: 12.h),
@@ -370,7 +370,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       'New user?',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14.sp,
+                        fontSize: 16.sp,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -385,7 +385,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ),
@@ -435,7 +435,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   children: [
                     SizedBox(height: 18.h),
                     Text(
-                      'Continue with Credentials!',
+                      'Create New Account!',
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: kPrimaryMid,
@@ -492,7 +492,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       'Already a user?',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14.sp,
+                        fontSize: 16.sp,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -507,7 +507,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ),

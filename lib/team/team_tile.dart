@@ -6,6 +6,8 @@ class TeamTile {
   String fbP;
   String liP;
   String glP;
+  int badgeType;
+  int badgeCount;
 
   TeamTile({
     required this.name,
@@ -15,6 +17,8 @@ class TeamTile {
     required this.fbP,
     required this.liP,
     required this.glP,
+    required this.badgeCount,
+    required this.badgeType,
   });
 
   factory TeamTile.fromMap(Map map) {
@@ -26,6 +30,8 @@ class TeamTile {
       fbP: map['fbP'],
       liP: map['liP'],
       glP: map['glP'],
+      badgeCount: map['badgeCount'],
+      badgeType: map['badgeType'],
     );
   }
 }

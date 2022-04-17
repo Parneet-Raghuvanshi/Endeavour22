@@ -9,6 +9,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: 640.h,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -19,16 +20,22 @@ class SplashScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                height: 96.h,
+        child: Stack(
+          children: [
+            Positioned(
+              left: -180.w,
+              width: 720.w,
+              bottom: -68.h,
+              height: 520.h,
+              child: Center(
+                child: Lottie.asset(
+                  'assets/lottie/spaceship.json',
+                  fit: BoxFit.cover,
+                  repeat: true,
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

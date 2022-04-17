@@ -178,8 +178,41 @@ class TeamScreen extends StatelessWidget {
               width: 328.w - 84.h - 120.w,
               height: 32.h,
               child: Container(
+                height: 32.w,
+                width: 328.w - 84.h - 120.w,
                 alignment: Alignment.center,
-                child: const Icon(Icons.badge_rounded),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (data.badgeCount > 0)
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        child: Image.asset(
+                          'assets/images/badge_${data.badgeType}.png',
+                          height: 20.w,
+                          width: 20.w,
+                        ),
+                      ),
+                    if (data.badgeCount > 1)
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        child: Image.asset(
+                          'assets/images/badge_${data.badgeType}.png',
+                          height: 20.w,
+                          width: 20.w,
+                        ),
+                      ),
+                    if (data.badgeCount > 2)
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        child: Image.asset(
+                          'assets/images/badge_${data.badgeType}.png',
+                          height: 20.w,
+                          width: 20.w,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],
