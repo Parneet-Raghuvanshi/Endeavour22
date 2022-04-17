@@ -25,8 +25,22 @@ class SplashScreen extends StatelessWidget {
             Positioned(
               left: -180.w,
               width: 720.w,
-              bottom: -68.h,
-              height: 520.h,
+              top: 280.h,
+              child: Center(
+                child: Text(
+                  'Launching...',
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: -180.w,
+              width: 720.w,
+              bottom: -60.h,
+              height: 380.h,
               child: Center(
                 child: Lottie.asset(
                   'assets/lottie/spaceship.json',

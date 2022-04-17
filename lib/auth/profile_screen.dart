@@ -220,7 +220,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 SizedBox(height: 18.h),
                 Text(
-                  'Continue with Credentials!',
+                  widget.isUpdate
+                      ? 'Check your details!'
+                      : 'Update your details!',
                   style: TextStyle(
                     fontSize: 16.sp,
                     color: kPrimaryMid,
