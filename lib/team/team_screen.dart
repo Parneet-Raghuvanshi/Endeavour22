@@ -64,7 +64,7 @@ class TeamScreen extends StatelessWidget {
                     : ListView.builder(
                         padding: EdgeInsets.zero,
                         itemBuilder: (context, index) =>
-                            eventTile(value.allTeam[index], context),
+                            teamTile(value.allTeam[index], context),
                         itemCount: value.allTeam.length,
                       ),
               ),
@@ -75,7 +75,7 @@ class TeamScreen extends StatelessWidget {
     );
   }
 
-  Widget eventTile(TeamTile data, BuildContext context) {
+  Widget teamTile(TeamTile data, BuildContext context) {
     return InkWell(
       onTap: () {
         showModalBottomSheet(

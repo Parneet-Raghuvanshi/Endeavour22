@@ -7,6 +7,7 @@ import 'package:endeavour22/events/event_content_provider.dart';
 import 'package:endeavour22/events/event_main_provider.dart';
 import 'package:endeavour22/events/event_registration_provider.dart';
 import 'package:endeavour22/helper/date_time_stamp.dart';
+import 'package:endeavour22/marketwatch/market_watch_provider.dart';
 import 'package:endeavour22/notifications/notification_model.dart';
 import 'package:endeavour22/notifications/notification_provider.dart';
 import 'package:endeavour22/schedule/schedule_provider.dart';
@@ -136,6 +137,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => GlimpsesProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => MarketWatchProvider(),
         ),
       ],
       child: ScreenUtilInit(

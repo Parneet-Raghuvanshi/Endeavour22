@@ -319,11 +319,6 @@ class _ProfileViewState extends State<ProfileView> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Container(
-              //   color: Colors.black26,
-              //   height: 1.w,
-              // ),
-              // SizedBox(height: 16.w),
               buildInputField(
                   controller: _oldPass,
                   name: 'Old Password',

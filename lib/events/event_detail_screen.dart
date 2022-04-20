@@ -9,6 +9,7 @@ import 'package:endeavour22/events/faq_screen.dart';
 import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
 import 'package:endeavour22/helper/navigator.dart';
+import 'package:endeavour22/marketwatch/market_watch_starter.dart';
 import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
@@ -31,13 +32,22 @@ class _EventDetailState extends State<EventDetail> {
   bool _loading = false;
   final _razorpay = Razorpay();
   bool isRegistered = false;
+  bool isLeader = false;
   @override
   void initState() {
+    final userData = Provider.of<Auth>(context, listen: false).userModel;
     final registered =
         Provider.of<Auth>(context, listen: false).userModel!.registered;
     for (Registered entry in registered) {
       if (entry.event == widget.model.mongoId) {
         isRegistered = true;
+        // FIND IS LEADER OR NOT..
+        final fullData = Provider.of<Auth>(context, listen: false).registered;
+        var data = fullData
+            .firstWhere((element) => element.eventName == widget.model.name);
+        var user = data.members
+            .firstWhere((element) => element.endvrid == userData!.endvrid);
+        if (user.isLeader) isLeader = true;
         break;
       }
     }
@@ -187,19 +197,45 @@ class _EventDetailState extends State<EventDetail> {
                     ),
                   )
                 : isRegistered
-                    ? Center(
-                        child: InkWell(
-                          onTap: () {
-                            // go to profile
-                            Navigator.of(context).push(
-                              SlideRightRoute(
-                                page: const ProfileView(),
+                    ? Column(
+                        children: [
+                          Center(
+                            child: InkWell(
+                              onTap: () {
+                                // go to profile
+                                Navigator.of(context).push(
+                                  SlideRightRoute(
+                                    page: const ProfileView(),
+                                  ),
+                                );
+                              },
+                              child: buildButton(
+                                  name: 'Registered',
+                                  width: 184.w,
+                                  isGreen: true),
+                            ),
+                          ),
+                          if (widget.model.eventId == 'FUN1' && isLeader)
+                            SizedBox(height: 16.w),
+                          if (widget.model.eventId == 'FUN1' && isLeader)
+                            Center(
+                              child: InkWell(
+                                onTap: () {
+                                  // GO TO STARTER SCREEN
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MarketWatchStarter(),
+                                    ),
+                                  );
+                                },
+                                child: buildButton(
+                                    name: 'Play Now',
+                                    width: 184.w,
+                                    isGreen: true),
                               ),
-                            );
-                          },
-                          child: buildButton(
-                              name: 'Registered', width: 184.w, isGreen: true),
-                        ),
+                            ),
+                        ],
                       )
                     : Center(
                         child: InkWell(

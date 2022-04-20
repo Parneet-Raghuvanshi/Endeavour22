@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Widget buildButton({
   required String name,
   required double width,
+  double h = 0,
   bool isGreen = false,
 }) {
   return Container(
@@ -22,7 +23,7 @@ Widget buildButton({
     alignment: Alignment.center,
     padding: EdgeInsets.symmetric(horizontal: 16.w),
     width: width,
-    height: 36.h,
+    height: h == 0 ? 36.h : h,
     child: Text(
       name,
       style: TextStyle(
