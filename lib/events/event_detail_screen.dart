@@ -14,6 +14,7 @@ import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:endeavour22/widgets/input_field.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
@@ -35,19 +36,13 @@ class _EventDetailState extends State<EventDetail> {
   bool isLeader = false;
   @override
   void initState() {
-    final userData = Provider.of<Auth>(context, listen: false).userModel;
     final registered =
         Provider.of<Auth>(context, listen: false).userModel!.registered;
     for (Registered entry in registered) {
       if (entry.event == widget.model.mongoId) {
         isRegistered = true;
-        // FIND IS LEADER OR NOT..
-        final fullData = Provider.of<Auth>(context, listen: false).registered;
-        var data = fullData
-            .firstWhere((element) => element.eventName == widget.model.name);
-        var user = data.members
-            .firstWhere((element) => element.endvrid == userData!.endvrid);
-        if (user.isLeader) isLeader = true;
+        // FIND IS LEADER OR NOT...
+        refreshStatus();
         break;
       }
     }
@@ -61,6 +56,28 @@ class _EventDetailState extends State<EventDetail> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
+  }
+
+  Future<void> refreshStatus() async {
+    final userData = Provider.of<Auth>(context, listen: false).userModel;
+    final _toggleDB = FirebaseDatabase.instance
+        .reference()
+        .child('toggle')
+        .child('marketWatch');
+    await _toggleDB.once().then((value) {
+      if (value.snapshot.value == true) {
+        final fullData = Provider.of<Auth>(context, listen: false).registered;
+        var data = fullData
+            .firstWhere((element) => element.eventName == widget.model.name);
+        var user = data.members
+            .firstWhere((element) => element.endvrid == userData!.endvrid);
+        if (user.isLeader) {
+          setState(() {
+            isLeader = true;
+          });
+        }
+      }
+    });
   }
 
   Future<void> refreshUserData() async {

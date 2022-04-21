@@ -1,6 +1,8 @@
+import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/schedule/schedule_provider.dart';
 import 'package:endeavour22/schedule/schedule_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:endeavour22/helper/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,17 +20,35 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen>
     with TickerProviderStateMixin {
   late TabController _appTitleController;
+  bool isOpen = false;
+  bool isChecked = false;
 
   @override
   void initState() {
     super.initState();
     _appTitleController = TabController(length: 2, vsync: this);
+    refreshStatus();
   }
 
   @override
   void dispose() {
     super.dispose();
     _appTitleController.dispose();
+  }
+
+  Future<void> refreshStatus() async {
+    final _toggleDB =
+        FirebaseDatabase.instance.reference().child('toggle').child('schedule');
+    await _toggleDB.once().then((value) {
+      if (value.snapshot.value == true) {
+        setState(() {
+          isOpen = true;
+        });
+      }
+    });
+    setState(() {
+      isChecked = true;
+    });
   }
 
   @override
@@ -129,35 +149,47 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   Widget buildDayOne() {
     return Consumer<ScheduleProvider>(
-      builder: (ctx, value, _) => value.dayOne.isEmpty
-          ? value.completedOne
+      builder: (ctx, value, _) => isOpen
+          ? value.dayOne.isEmpty
+              ? value.completedOne
+                  ? comingSoon()
+                  : Center(
+                      child: buildLoader(48.h),
+                    )
+              : ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) =>
+                      scheduleTile(value.dayOne[index], index),
+                  itemCount: value.dayOne.length - 1,
+                )
+          : isChecked
               ? comingSoon()
               : Center(
                   child: buildLoader(48.h),
-                )
-          : ListView.builder(
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) =>
-                  scheduleTile(value.dayOne[index], index),
-              itemCount: value.dayOne.length - 1,
-            ),
+                ),
     );
   }
 
   Widget buildDayTwo() {
     return Consumer<ScheduleProvider>(
-      builder: (ctx, value, _) => value.dayTwo.isEmpty
-          ? value.completedTwo
+      builder: (ctx, value, _) => isOpen
+          ? value.dayTwo.isEmpty
+              ? value.completedTwo
+                  ? comingSoon()
+                  : Center(
+                      child: buildLoader(48.h),
+                    )
+              : ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) =>
+                      scheduleTile(value.dayTwo[index], index),
+                  itemCount: value.dayTwo.length,
+                )
+          : isChecked
               ? comingSoon()
               : Center(
                   child: buildLoader(48.h),
-                )
-          : ListView.builder(
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) =>
-                  scheduleTile(value.dayTwo[index], index),
-              itemCount: value.dayTwo.length,
-            ),
+                ),
     );
   }
 

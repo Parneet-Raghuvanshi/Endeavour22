@@ -4,15 +4,45 @@ import 'package:endeavour22/speakers/speaker_tile.dart';
 import 'package:endeavour22/speakers/speakers_provider.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SpeakersScreen extends StatelessWidget {
+class SpeakersScreen extends StatefulWidget {
   final VoidCallback openDrawer;
   const SpeakersScreen({Key? key, required this.openDrawer}) : super(key: key);
+
+  @override
+  State<SpeakersScreen> createState() => _SpeakersScreenState();
+}
+
+class _SpeakersScreenState extends State<SpeakersScreen> {
+  bool isOpen = false;
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    refreshStatus();
+    super.initState();
+  }
+
+  Future<void> refreshStatus() async {
+    final _toggleDB =
+        FirebaseDatabase.instance.reference().child('toggle').child('speakers');
+    await _toggleDB.once().then((value) {
+      if (value.snapshot.value == true) {
+        setState(() {
+          isOpen = true;
+        });
+      }
+    });
+    setState(() {
+      isChecked = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +58,7 @@ class SpeakersScreen extends StatelessWidget {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: openDrawer,
+                onTap: widget.openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -55,18 +85,24 @@ class SpeakersScreen extends StatelessWidget {
               width: 360.w,
               height: 640.h - 56.h - statusBarHeight,
               child: Consumer<SpeakerProvider>(
-                builder: (ctx, value, _) => value.allSpeakers.isEmpty
-                    ? value.completed
+                builder: (ctx, value, _) => isOpen
+                    ? value.allSpeakers.isEmpty
+                        ? value.completed
+                            ? comingSoon()
+                            : Center(
+                                child: buildLoader(48.h),
+                              )
+                        : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) =>
+                                speakerTile(value.allSpeakers[index], context),
+                            itemCount: value.allSpeakers.length,
+                          )
+                    : isChecked
                         ? comingSoon()
                         : Center(
                             child: buildLoader(48.h),
-                          )
-                    : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context, index) =>
-                            speakerTile(value.allSpeakers[index], context),
-                        itemCount: value.allSpeakers.length,
-                      ),
+                          ),
               ),
             ),
           ],

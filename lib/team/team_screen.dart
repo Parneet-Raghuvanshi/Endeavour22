@@ -109,10 +109,11 @@ class TeamScreen extends StatelessWidget {
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              // borderRadius: const BorderRadius.only(
+              //   topLeft: Radius.circular(8),
+              //   bottomLeft: Radius.circular(8),
+              // ),
               child: SizedBox(
                 height: 84.h,
                 width: 84.h,
@@ -124,6 +125,7 @@ class TeamScreen extends StatelessWidget {
                     ),
                   ),
                   imageUrl: data.imgUri,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

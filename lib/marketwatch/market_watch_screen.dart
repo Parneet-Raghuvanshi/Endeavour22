@@ -1,7 +1,9 @@
 import 'package:endeavour22/auth/auth_provider.dart';
+import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/marketwatch/main_model.dart';
 import 'package:endeavour22/marketwatch/market_watch_provider.dart';
 import 'package:endeavour22/widgets/button.dart';
+import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:endeavour22/widgets/input_field.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,8 @@ class _MarketWatchScreenState extends State<MarketWatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _toggle = Provider.of<MarketWatchProvider>(context).toggleStatus;
+    final _finished = Provider.of<MarketWatchProvider>(context).finished;
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final model = Provider.of<MarketWatchProvider>(context).profile;
     final round = Provider.of<MarketWatchProvider>(context).stocks[0].round;
@@ -41,176 +45,172 @@ class _MarketWatchScreenState extends State<MarketWatchScreen> {
         return false;
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          physics: const ScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(height: statusBarHeight),
-              Container(
-                height: 100.h,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      width: 360.w,
-                      height: 56.h,
-                      right: 0,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Market Watch',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 56.h,
-                      left: 0,
-                      height: 44.h,
-                      width: 180.w,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          round,
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 56.h,
-                      height: 44.h,
-                      width: 180.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/money.png',
-                            height: 36.w,
-                            width: 36.w,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            model!.amount > 999
-                                ? formatter.format(model.amount)
-                                : model.amount.toString(),
+        body: _finished
+            ? buildFinishPage()
+            : SingleChildScrollView(
+                child: Container(
+                  height: 640.h,
+                  padding: EdgeInsets.only(top: statusBarHeight),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        width: 360.w,
+                        height: 56.h,
+                        right: 0,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Market Watch',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              color: Colors.black,
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 56.h,
+                        left: 0,
+                        height: 44.h,
+                        width: 180.w,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            round,
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        top: 56.h,
+                        height: 48.h,
+                        width: 180.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/money.png',
+                              height: 36.w,
+                              width: 36.w,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              model!.amount > 999
+                                  ? formatter.format(model.amount)
+                                  : model.amount.toString(),
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: 104.h,
+                        width: 360.w,
+                        height: 640.h - 56.h - 48.h - statusBarHeight,
+                        child: _toggle
+                            ? buildCardList()
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      'Updating',
+                                      style: TextStyle(fontSize: 18.sp),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: buildLoader(48.h),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              buildCardList(),
-            ],
-          ),
-        ),
       ),
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   final statusBarHeight = MediaQuery.of(context).padding.top;
-  //   final model = Provider.of<MarketWatchProvider>(context).profile;
-  //   final round = Provider.of<MarketWatchProvider>(context).stocks[0].round;
-  //   return WillPopScope(
-  //     onWillPop: () async {
-  //       showNormalFlush(
-  //           context: context,
-  //           message: "You can't exit application during this moment...");
-  //       return false;
-  //     },
-  //     child: Scaffold(
-  //       body: SingleChildScrollView(
-  //         child: Container(
-  //           height: 640.h,
-  //           padding: EdgeInsets.only(top: statusBarHeight),
-  //           child: Stack(
-  //             children: [
-  //               Positioned(
-  //                 width: 360.w,
-  //                 height: 56.h,
-  //                 right: 0,
-  //                 child: Container(
-  //                   alignment: Alignment.center,
-  //                   child: Text(
-  //                     'Market Watch',
-  //                     style: TextStyle(
-  //                       color: Colors.black,
-  //                       fontSize: 24.sp,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: 56.h,
-  //                 left: 0,
-  //                 height: 44.h,
-  //                 width: 180.w,
-  //                 child: Container(
-  //                   alignment: Alignment.center,
-  //                   child: Text(
-  //                     round,
-  //                     style: TextStyle(
-  //                       fontSize: 20.sp,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 right: 0,
-  //                 top: 56.h,
-  //                 height: 48.h,
-  //                 width: 180.w,
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.center,
-  //                   children: [
-  //                     Image.asset(
-  //                       'assets/images/money.png',
-  //                       height: 36.w,
-  //                       width: 36.w,
-  //                     ),
-  //                     SizedBox(width: 8.w),
-  //                     Text(
-  //                       model!.amount > 999
-  //                           ? formatter.format(model.amount)
-  //                           : model.amount.toString(),
-  //                       style: TextStyle(
-  //                         fontSize: 18.sp,
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: 104.h,
-  //                 width: 360.w,
-  //                 height: 640.h - 56.h - 48.h - statusBarHeight,
-  //                 child: buildCardList(),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget buildFinishPage() {
+    int worth = Provider.of<MarketWatchProvider>(context).totalWorth;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/money.png',
+              height: 184.w,
+              width: 184.w,
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Thank You For Playing!',
+              style: TextStyle(
+                fontSize: 28.sp,
+                color: kPrimaryMid,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Text(
+                "Your Total Worth",
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  color: kPrimaryMid,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/money_single.png',
+                  height: 36.w,
+                  width: 36.w,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  worth > 999 ? formatter.format(worth) : worth.toString(),
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: kPrimaryMid,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Center(
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: buildButton(
+              name: 'Finish',
+              width: 184.w,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget buildCardList() {
     return Consumer<MarketWatchProvider>(
       builder: (ctx, value, _) => ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
         padding: EdgeInsets.symmetric(vertical: 4.w),
         itemBuilder: (context, index) => Container(
           child: buildCard(value.mainStocks[index], index),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:endeavour22/speakers/speaker_tile.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -25,7 +26,8 @@ class SpeakerProvider with ChangeNotifier {
         _completed = true;
         notifyListeners();
       } else {
-        final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
+        final _allData = new SplayTreeMap<String, dynamic>.from(
+            event.snapshot.value as Map, (a, b) => a.compareTo(b));
         _allSpeakers = _allData.values.map((e) {
           final data = SpeakerTile.fromMap(Map<String, dynamic>.from(e));
           return data;

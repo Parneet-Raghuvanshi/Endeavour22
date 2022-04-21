@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:endeavour22/events/event_model.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -33,7 +34,8 @@ class EventMainProvider with ChangeNotifier {
         _isEventsOpen = false;
         notifyListeners();
       } else {
-        final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
+        final _allData = new SplayTreeMap<String, dynamic>.from(
+            event.snapshot.value as Map, (a, b) => a.compareTo(b));
         _allData.forEach((key, value) {
           final data = EventModel.fromMap(value);
           if (data.eventId.contains('CORP')) {

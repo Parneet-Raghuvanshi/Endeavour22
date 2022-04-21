@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:endeavour22/sponsors/sponsor_tile.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -25,7 +26,8 @@ class SponsorsProvider with ChangeNotifier {
         _completed = true;
         notifyListeners();
       } else {
-        final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
+        final _allData = new SplayTreeMap<String, dynamic>.from(
+            event.snapshot.value as Map, (a, b) => a.compareTo(b));
         _sponsors = _allData.values.map((e) {
           final data = SponsorTile.fromMap(Map<String, dynamic>.from(e));
           return data;

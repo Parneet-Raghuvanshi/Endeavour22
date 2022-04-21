@@ -4,6 +4,7 @@ import 'package:endeavour22/sponsors/sponsor_tile.dart';
 import 'package:endeavour22/sponsors/sponsors_provider.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -11,9 +12,38 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SponsorsScreen extends StatelessWidget {
+class SponsorsScreen extends StatefulWidget {
   final VoidCallback openDrawer;
   const SponsorsScreen({Key? key, required this.openDrawer}) : super(key: key);
+
+  @override
+  State<SponsorsScreen> createState() => _SponsorsScreenState();
+}
+
+class _SponsorsScreenState extends State<SponsorsScreen> {
+  bool isOpen = false;
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    refreshStatus();
+    super.initState();
+  }
+
+  Future<void> refreshStatus() async {
+    final _toggleDB =
+        FirebaseDatabase.instance.reference().child('toggle').child('sponsors');
+    await _toggleDB.once().then((value) {
+      if (value.snapshot.value == true) {
+        setState(() {
+          isOpen = true;
+        });
+      }
+    });
+    setState(() {
+      isChecked = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +59,7 @@ class SponsorsScreen extends StatelessWidget {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: openDrawer,
+                onTap: widget.openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -58,23 +88,33 @@ class SponsorsScreen extends StatelessWidget {
               child: Consumer<SponsorsProvider>(
                 builder: (ctx, value, _) => Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: value.allSponsors.isEmpty
-                      ? value.completed
+                  child: isOpen
+                      ? value.allSponsors.isEmpty
+                          ? value.completed
+                              ? comingSoon()
+                              : Center(child: buildLoader(48.h))
+                          : StaggeredGridView.countBuilder(
+                              padding: EdgeInsets.zero,
+                              staggeredTileBuilder: (index) =>
+                                  StaggeredTile.count(
+                                      value.allSponsors[index].tile == 'SQ'
+                                          ? 1
+                                          : 2,
+                                      1),
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 8.w,
+                              itemCount: value.allSponsors.length,
+                              crossAxisSpacing: 8.w,
+                              itemBuilder: (BuildContext context, int index) {
+                                final data = value.allSponsors[index];
+                                return sponsorTile(data, context);
+                              },
+                            )
+                      : isChecked
                           ? comingSoon()
-                          : Center(child: buildLoader(48.h))
-                      : StaggeredGridView.countBuilder(
-                          padding: EdgeInsets.zero,
-                          staggeredTileBuilder: (index) => StaggeredTile.count(
-                              value.allSponsors[index].tile == 'SQ' ? 1 : 2, 1),
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 8.w,
-                          itemCount: value.allSponsors.length,
-                          crossAxisSpacing: 8.w,
-                          itemBuilder: (BuildContext context, int index) {
-                            final data = value.allSponsors[index];
-                            return sponsorTile(data, context);
-                          },
-                        ),
+                          : Center(
+                              child: buildLoader(48.h),
+                            ),
                 ),
               ),
             ),

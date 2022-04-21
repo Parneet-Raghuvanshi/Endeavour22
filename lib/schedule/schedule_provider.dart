@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:endeavour22/schedule/schedule_tile.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -34,7 +35,8 @@ class ScheduleProvider with ChangeNotifier {
         _completedOne = true;
         notifyListeners();
       } else {
-        final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
+        final _allData = new SplayTreeMap<String, dynamic>.from(
+            event.snapshot.value as Map, (a, b) => a.compareTo(b));
         _dayOneSchedule = _allData.values.map((e) {
           final data = ScheduleTile.fromMap(Map<String, dynamic>.from(e));
           return data;
@@ -52,7 +54,8 @@ class ScheduleProvider with ChangeNotifier {
         _completedTwo = true;
         notifyListeners();
       } else {
-        final _allData = Map<String, dynamic>.from(event.snapshot.value as Map);
+        final _allData = new SplayTreeMap<String, dynamic>.from(
+            event.snapshot.value as Map, (a, b) => a.compareTo(b));
         _dayTwoSchedule = _allData.values.map((e) {
           final data = ScheduleTile.fromMap(Map<String, dynamic>.from(e));
           return data;
