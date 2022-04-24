@@ -10,7 +10,7 @@ class EventMainProvider with ChangeNotifier {
   final List<EventModel> _funEvents = [];
   final List<EventModel> _spsEvents = [];
   bool _isEventsOpen = true;
-  final _eventDB = FirebaseDatabase.instance.reference().child('eventMain');
+  final _eventDB = FirebaseDatabase.instance.ref().child('eventMain');
   late StreamSubscription<DatabaseEvent> _eventStream;
 
   List<EventModel> get corpEvents => _corpEvents;

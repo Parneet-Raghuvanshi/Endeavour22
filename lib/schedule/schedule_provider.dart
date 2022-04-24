@@ -9,9 +9,9 @@ class ScheduleProvider with ChangeNotifier {
   List<ScheduleTile> _dayOneSchedule = [];
   List<ScheduleTile> _dayTwoSchedule = [];
   final _dayOneDB =
-      FirebaseDatabase.instance.reference().child('schedule').child('dayone');
+      FirebaseDatabase.instance.ref().child('schedule').child('dayone');
   final _dayTwoDB =
-      FirebaseDatabase.instance.reference().child('schedule').child('daytwo');
+      FirebaseDatabase.instance.ref().child('schedule').child('daytwo');
   late StreamSubscription<DatabaseEvent> _dayOneStream;
   late StreamSubscription<DatabaseEvent> _dayTwoStream;
   bool _completedOne = false;

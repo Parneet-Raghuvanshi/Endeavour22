@@ -6,7 +6,6 @@ import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/drawermain/glimpses_provider.dart';
 import 'package:endeavour22/helper/constants.dart';
 import 'package:endeavour22/helper/http_exception.dart';
-import 'package:endeavour22/notifications/badge.dart';
 import 'package:endeavour22/notifications/notification_provider.dart';
 import 'package:endeavour22/notifications/notification_screen.dart';
 import 'package:endeavour22/widgets/button.dart';
@@ -182,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: 16.h,
               ),
               child: Text(
-                "Endeavour is an annual Entrepreneurship Summit of KIET, Ghaziabad that brings a golden opportunity for budding entrepreneurs as well as for the tech-savvies to showcase flair. Our annual Techno-Entrepreneurial Summit, recognized as Endeavour, was initiated in 2015 and the rich legacy has been carried on for the past 6 years. It is a platform where experience, learnings, inspiration, and ideas converge to make it once in a lifetime experience for everyone. It comprises technical, corporate, and other thrilling events along with encouraging speeches by highly illustrious speakers and entrepreneurs. The event is organized at an inter-college level, so the main intention of the event is to foster an entrepreneurial culture among the participants and to introduce them to the corporate world. Thus, they have a good window of opportunities to explore and win numerous prizes, gift hampers, and goodies!",
+                "Endeavour is an annual Entrepreneurship Summit of KIET, Ghaziabad that brings a golden opportunity for budding entrepreneurs as well as for the tech-savvies to showcase flair. Our annual Techno-Entrepreneurial Summit, recognized as Endeavour, was initiated in 2015 and the rich legacy has been carried on for the past 7 years. It is a platform where experience, learnings, inspiration, and ideas converge to make it once in a lifetime experience for everyone. It comprises technical, corporate, and other thrilling events along with encouraging speeches by highly illustrious speakers and entrepreneurs. The event is organized at an inter-college level, so the main intention of the event is to foster an entrepreneurial culture among the participants and to introduce them to the corporate world. Thus, they have a good window of opportunities to explore and win numerous prizes, gift hampers, and goodies!",
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 14.sp,
@@ -334,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Form Send
       showNormalFlush(
         context: context,
-        message: 'Contact Form Submitted Successfully!',
+        message: 'Contact Form submitted successfully!',
       );
     } on HttpException catch (error) {
       showErrorFlush(

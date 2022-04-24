@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_name == '') {
       showErrorFlush(
         context: context,
-        message: 'Your Name is empty!',
+        message: 'Your Name field is empty!',
       );
       setState(() {
         _isLoading = false;
@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_clgName.isEmpty) {
       showErrorFlush(
         context: context,
-        message: 'College Name is empty!',
+        message: 'College Name field is empty!',
       );
       setState(() {
         _isLoading = false;
@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (_clgId.isEmpty) {
       showErrorFlush(
         context: context,
-        message: 'College Id is empty!',
+        message: 'College Id field is empty!',
       );
       setState(() {
         _isLoading = false;
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         message: error.toString(),
       );
     } catch (error) {
-      String errorMessage = 'Could not Complete Profile, please try again!';
+      String errorMessage = 'Could not complete profile, please try again!';
       showErrorFlush(
         context: context,
         message: errorMessage,

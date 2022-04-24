@@ -1,4 +1,3 @@
-import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/schedule/schedule_provider.dart';
 import 'package:endeavour22/schedule/schedule_tile.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
@@ -38,7 +37,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   Future<void> refreshStatus() async {
     final _toggleDB =
-        FirebaseDatabase.instance.reference().child('toggle').child('schedule');
+        FirebaseDatabase.instance.ref().child('toggle').child('schedule');
     await _toggleDB.once().then((value) {
       if (value.snapshot.value == true) {
         setState(() {

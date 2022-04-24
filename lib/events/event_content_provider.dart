@@ -15,10 +15,8 @@ class EventContentProvider with ChangeNotifier {
   }
 
   void _fetchContent(String eventId) {
-    final _contentDB = FirebaseDatabase.instance
-        .reference()
-        .child('eventContent')
-        .child(eventId);
+    final _contentDB =
+        FirebaseDatabase.instance.ref().child('eventContent').child(eventId);
     _contentStream = _contentDB.onValue.listen((event) {
       if (event.snapshot.value == null) {
         _contentAll.clear();

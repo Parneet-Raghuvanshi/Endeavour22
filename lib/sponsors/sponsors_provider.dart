@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 class SponsorsProvider with ChangeNotifier {
   List<SponsorTile> _sponsors = [];
-  final _sponsorDB = FirebaseDatabase.instance.reference().child('sponsors');
+  final _sponsorDB = FirebaseDatabase.instance.ref().child('sponsors');
   late StreamSubscription<DatabaseEvent> _sponsorsStream;
   bool _completed = false;
 

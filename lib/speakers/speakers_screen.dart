@@ -31,7 +31,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
 
   Future<void> refreshStatus() async {
     final _toggleDB =
-        FirebaseDatabase.instance.reference().child('toggle').child('speakers');
+        FirebaseDatabase.instance.ref().child('toggle').child('speakers');
     await _toggleDB.once().then((value) {
       if (value.snapshot.value == true) {
         setState(() {

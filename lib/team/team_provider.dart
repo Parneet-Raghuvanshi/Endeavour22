@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 class TeamProvider with ChangeNotifier {
   List<TeamTile> _team = [];
-  final _teamDB = FirebaseDatabase.instance.reference().child('team');
+  final _teamDB = FirebaseDatabase.instance.ref().child('team');
   late StreamSubscription<DatabaseEvent> _teamStream;
   bool _completed = false;
 

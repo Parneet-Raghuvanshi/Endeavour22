@@ -14,17 +14,14 @@ class MarketWatchProvider with ChangeNotifier {
   int _totalWorth = 0;
   bool _isOpen = false;
   bool _finished = false;
-  final _profileDB =
-      FirebaseDatabase.instance.reference().child('marketProfile');
-  final _stocksDB = FirebaseDatabase.instance.reference().child('marketStocks');
+  final _profileDB = FirebaseDatabase.instance.ref().child('marketProfile');
+  final _stocksDB = FirebaseDatabase.instance.ref().child('marketStocks');
   final _toggleDB = FirebaseDatabase.instance
-      .reference()
+      .ref()
       .child('toggle')
       .child('marketWatchInternal');
-  final _finishDB = FirebaseDatabase.instance
-      .reference()
-      .child('toggle')
-      .child('marketWatch');
+  final _finishDB =
+      FirebaseDatabase.instance.ref().child('toggle').child('marketWatch');
   late StreamSubscription<DatabaseEvent> _profileStream;
   late StreamSubscription<DatabaseEvent> _stocksStream;
   late StreamSubscription<DatabaseEvent> _toggleStream;

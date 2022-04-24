@@ -141,7 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
       showNormalFlush(
         context: context,
         message:
-            "Account Created Successfully, please very you email and then longin!",
+            "Account Created Successfully, please verify you email and then login!",
       );
       setState(() {
         _isLogin = true;
@@ -272,7 +272,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       // THIS IS LOGIN PAGE
                       buildLogin(),
-                      // THIS IS SIGNUP
+                      // THIS IS SIGNUP PAGE
                       buildSignUp(),
                     ],
                   ),
@@ -622,7 +622,7 @@ class _AuthScreenState extends State<AuthScreen> {
         now.difference(currentBackPressTime!) > const Duration(seconds: 3)) {
       currentBackPressTime = now;
       const snackBar = SnackBar(
-        content: Text('Press back again to exit the application!'),
+        content: Text('Press back again to exit application!'),
         duration: Duration(seconds: 3),
       );
       ScaffoldMessenger.of(context)

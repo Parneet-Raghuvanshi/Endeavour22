@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class GlimpsesProvider with ChangeNotifier {
   List<String> _glimpses = [];
-  final _glDB = FirebaseDatabase.instance.reference().child('glimpses');
+  final _glDB = FirebaseDatabase.instance.ref().child('glimpses');
   late StreamSubscription<DatabaseEvent> _glStream;
 
   List<String> get glimpses => _glimpses;

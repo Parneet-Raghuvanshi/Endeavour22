@@ -32,7 +32,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   Future<void> refreshStatus() async {
     final _toggleDB =
-        FirebaseDatabase.instance.reference().child('toggle').child('sponsors');
+        FirebaseDatabase.instance.ref().child('toggle').child('sponsors');
     await _toggleDB.once().then((value) {
       if (value.snapshot.value == true) {
         setState(() {

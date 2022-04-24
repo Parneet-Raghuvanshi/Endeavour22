@@ -60,10 +60,8 @@ class _EventDetailState extends State<EventDetail> {
 
   Future<void> refreshStatus() async {
     final userData = Provider.of<Auth>(context, listen: false).userModel;
-    final _toggleDB = FirebaseDatabase.instance
-        .reference()
-        .child('toggle')
-        .child('marketWatch');
+    final _toggleDB =
+        FirebaseDatabase.instance.ref().child('toggle').child('marketWatch');
     await _toggleDB.once().then((value) {
       if (value.snapshot.value == true) {
         final fullData = Provider.of<Auth>(context, listen: false).registered;

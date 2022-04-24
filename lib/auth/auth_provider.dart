@@ -75,11 +75,11 @@ class Auth with ChangeNotifier {
     _token = userToken.toString();
     var status = await fetchUserData(_token);
     if (!status) {
-      _token = '';
       showErrorFlush(
         context: context,
-        message: "User Session Expired please login again!",
+        message: "User session expired please login again!",
       );
+      await logout();
       return;
     }
     notifyListeners();

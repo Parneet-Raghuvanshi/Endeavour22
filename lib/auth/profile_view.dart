@@ -450,7 +450,7 @@ class _ProfileViewState extends State<ProfileView> {
 }
 
 class BottomSheet extends StatelessWidget {
-  RegisteredModel model;
+  final RegisteredModel model;
   BottomSheet({Key? key, required this.model}) : super(key: key);
 
   @override

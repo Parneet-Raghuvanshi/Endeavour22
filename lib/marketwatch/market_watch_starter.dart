@@ -87,8 +87,7 @@ class _MarketWatchStarterState extends State<MarketWatchStarter> {
 
   void startNow() async {
     final userData = Provider.of<Auth>(context, listen: false).userModel!;
-    final _profileDB =
-        FirebaseDatabase.instance.reference().child('marketProfile');
+    final _profileDB = FirebaseDatabase.instance.ref().child('marketProfile');
     // FIRST CHECK PROFILE IS ALREADY ATTEMPTED
     await _profileDB.child(userData.id).once().then((value) async {
       if (value.snapshot.value != null) {

@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 class SpeakerProvider with ChangeNotifier {
   List<SpeakerTile> _allSpeakers = [];
-  final _speakerDB = FirebaseDatabase.instance.reference().child('speakers');
+  final _speakerDB = FirebaseDatabase.instance.ref().child('speakers');
   late StreamSubscription<DatabaseEvent> _speakerStream;
   bool _completed = false;
 

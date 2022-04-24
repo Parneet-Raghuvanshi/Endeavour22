@@ -45,7 +45,7 @@ Future<void> backGroundHandler(RemoteMessage message) async {
       date: formattedDate,
       read: 'false',
     );
-    final db = FirebaseDatabase.instance.reference();
+    final db = FirebaseDatabase.instance.ref();
     db
         .child('notifications')
         .child(userId.toString())
@@ -164,7 +164,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthWrapper extends StatefulWidget {
-  Auth auth;
+  final Auth auth;
   AuthWrapper({Key? key, required this.auth}) : super(key: key);
 
   @override
@@ -201,7 +201,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
           date: formattedDate,
           read: 'false',
         );
-        final db = FirebaseDatabase.instance.reference();
+        final db = FirebaseDatabase.instance.ref();
         db
             .child('notifications')
             .child(userId.toString())
