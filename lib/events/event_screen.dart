@@ -2,13 +2,26 @@ import 'package:endeavour22/events/event_detail_screen.dart';
 import 'package:endeavour22/events/event_model.dart';
 import 'package:endeavour22/events/event_main_provider.dart';
 import 'package:endeavour22/helper/constants.dart';
+import 'package:endeavour22/widgets/banner.dart';
+import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class EventScreen extends StatelessWidget {
+class EventScreen extends StatefulWidget {
   final VoidCallback openDrawer;
   const EventScreen({Key? key, required this.openDrawer}) : super(key: key);
+
+  @override
+  State<EventScreen> createState() => _EventScreenState();
+}
+
+class _EventScreenState extends State<EventScreen> {
+  @override
+  void initState() {
+    Provider.of<EventMainProvider>(context, listen: false).fetchEvents();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +38,7 @@ class EventScreen extends StatelessWidget {
               width: 56.w,
               height: 56.h,
               child: InkWell(
-                onTap: openDrawer,
+                onTap: widget.openDrawer,
                 child: Container(
                     margin: EdgeInsets.all(16.w),
                     child: Image.asset('assets/images/back.png')),
@@ -52,10 +65,14 @@ class EventScreen extends StatelessWidget {
               width: 360.w,
               height: 640.h - 56.h - statusBarHeight,
               child: Consumer<EventMainProvider>(
-                builder: (ctx, event, _) => event.isEventsOpen
-                    ? buildEventTypes(context)
-                    : const Center(
-                        child: Text('Coming Soon!'),
+                builder: (ctx, event, _) => event.completed
+                    ? event.isEventsOpen
+                        ? buildEventTypes(context)
+                        : const Center(
+                            child: Text('Coming Soon!'),
+                          )
+                    : Center(
+                        child: buildLoader(48.h),
                       ),
               ),
             ),
@@ -245,16 +262,33 @@ class EventScreen extends StatelessWidget {
               width: 128.w,
               height: 128.w,
               right: 0,
-              child: Center(
-                child: Hero(
-                  tag: model.eventId,
-                  child: Image.network(
-                    model.imgUri,
-                    height: 78.w,
-                    width: 78.w,
-                  ),
-                ),
-              ),
+              child: model.isDis
+                  ? ClipRect(
+                      child: buildBanner(
+                        child: Center(
+                          child: Hero(
+                            tag: model.eventId,
+                            child: Image.network(
+                              model.imgUri,
+                              height: 78.w,
+                              width: 78.w,
+                            ),
+                          ),
+                        ),
+                        oldP: int.parse(model.price),
+                        newP: int.parse(model.discount),
+                      ),
+                    )
+                  : Center(
+                      child: Hero(
+                        tag: model.eventId,
+                        child: Image.network(
+                          model.imgUri,
+                          height: 78.w,
+                          width: 78.w,
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),

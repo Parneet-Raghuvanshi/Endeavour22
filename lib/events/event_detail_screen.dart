@@ -34,6 +34,7 @@ class _EventDetailState extends State<EventDetail> {
   final _razorpay = Razorpay();
   bool isRegistered = false;
   bool isLeader = false;
+
   @override
   void initState() {
     final registered =
@@ -56,6 +57,11 @@ class _EventDetailState extends State<EventDetail> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<void> refreshStatus() async {
@@ -102,6 +108,10 @@ class _EventDetailState extends State<EventDetail> {
     final List<EventDetailTile> details =
         Provider.of<EventContentProvider>(context).allContent;
     var topPadding = MediaQuery.of(context).padding.top;
+    final perc = 100 -
+        ((int.parse(widget.model.discount) / int.parse(widget.model.price)) *
+                100)
+            .toInt();
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -196,11 +206,63 @@ class _EventDetailState extends State<EventDetail> {
                 horizontal: 16.w,
                 vertical: 16.w,
               ),
-              child: Text(
-                widget.model.name,
-                style: TextStyle(
-                  fontSize: 24.sp,
-                ),
+              child: Column(
+                children: [
+                  Text(
+                    widget.model.name,
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                    ),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.model.isDis)
+                        Text(
+                          '₹ ' + widget.model.price,
+                          style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            fontSize: 14.sp,
+                            color: Colors.red,
+                          ),
+                        ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        widget.model.isDis
+                            ? '₹ ' + widget.model.discount
+                            : '₹ ' + widget.model.price,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      if (widget.model.isDis)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orangeAccent,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12, //New
+                                blurRadius: 10.0,
+                                offset: Offset(0.5, 0.5),
+                              ),
+                            ],
+                          ),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          height: 26.h,
+                          child: Text(
+                            '$perc% off',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ),
             ),
             if (details.isNotEmpty) buildDetailList(details),
@@ -507,7 +569,9 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                 ),
                 Text(
-                  widget.model.price,
+                  widget.model.isDis
+                      ? '₹ ' + widget.model.discount
+                      : '₹ ' + widget.model.price,
                   style: TextStyle(
                     color: Colors.black54,
                     fontSize: 16.sp,
@@ -603,7 +667,9 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                 ),
                 Text(
-                  widget.model.price,
+                  widget.model.isDis
+                      ? '₹ ' + widget.model.discount
+                      : '₹ ' + widget.model.price,
                   style: TextStyle(
                     color: Colors.black54,
                     fontSize: 16.sp,
@@ -696,7 +762,9 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                 ),
                 Text(
-                  widget.model.price,
+                  widget.model.isDis
+                      ? '₹ ' + widget.model.discount
+                      : '₹ ' + widget.model.price,
                   style: TextStyle(
                     color: Colors.black54,
                     fontSize: 16.sp,

@@ -10,6 +10,7 @@ class EventMainProvider with ChangeNotifier {
   final List<EventModel> _funEvents = [];
   final List<EventModel> _spsEvents = [];
   bool _isEventsOpen = true;
+  bool _completed = false;
   final _eventDB = FirebaseDatabase.instance.ref().child('eventMain');
   late StreamSubscription<DatabaseEvent> _eventStream;
 
@@ -17,21 +18,18 @@ class EventMainProvider with ChangeNotifier {
   List<EventModel> get funEvents => _funEvents;
   List<EventModel> get spsEvents => _spsEvents;
 
-  EventMainProvider() {
-    _fetchEvents();
-  }
+  bool get completed => _completed;
 
-  bool get isEventsOpen {
-    return _isEventsOpen;
-  }
+  bool get isEventsOpen => _isEventsOpen;
 
-  void _fetchEvents() {
+  void fetchEvents() {
+    _corpEvents.clear();
+    _funEvents.clear();
+    _spsEvents.clear();
     _eventStream = _eventDB.onValue.listen((event) {
       if (event.snapshot.value == null) {
-        _corpEvents.clear();
-        _funEvents.clear();
-        _spsEvents.clear();
         _isEventsOpen = false;
+        _completed = true;
         notifyListeners();
       } else {
         final _allData = new SplayTreeMap<String, dynamic>.from(
@@ -47,6 +45,7 @@ class EventMainProvider with ChangeNotifier {
           }
         });
         _isEventsOpen = true;
+        _completed = true;
         notifyListeners();
       }
     });
