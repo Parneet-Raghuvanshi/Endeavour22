@@ -460,7 +460,7 @@ class _EventDetailState extends State<EventDetail> {
   Future<void> startPayment(String orderId, String amount, String name,
       String desc, String contact, String email) async {
     var options = {
-      'key': 'rzp_test_ZPUlvsXDSMYQyQ',
+      'key': razorpayApi,
       'amount': amount,
       'order_id': orderId,
       'name': name,
@@ -474,6 +474,10 @@ class _EventDetailState extends State<EventDetail> {
       _razorpay.open(options);
     } catch (error) {
       //handle here
+      showErrorFlush(
+        context: context,
+        message: 'Something went wrong!',
+      );
       print('Error : Payment ' + error.toString());
     }
   }

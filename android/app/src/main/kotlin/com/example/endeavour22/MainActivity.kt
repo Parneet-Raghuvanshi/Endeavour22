@@ -1,4 +1,4 @@
-package com.example.endeavour22
+package com.ecell.end_eavour
 
 import io.flutter.embedding.android.FlutterActivity
 

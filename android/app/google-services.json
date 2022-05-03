@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:441673372330:android:0cfcd192e4e69ff9d676d3",
+        "mobilesdk_app_id": "1:441673372330:android:dbe39544e07ce601d676d3",
         "android_client_info": {
-          "package_name": "com.example.endeavour22"
+          "package_name": "com.ecell.end_eavour"
         }
       },
       "oauth_client": [
@@ -30,6 +30,49 @@
             {
               "client_id": "441673372330-00j4stg0f3vq5q4eug3deqdgl7jhskbt.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "441673372330-0orke66g89gt13ao7ina4dij443hktkq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.endeavour22"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441673372330:android:2281dde983da038cd676d3",
+        "android_client_info": {
+          "package_name": "com.example.marketwatchadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441673372330-00j4stg0f3vq5q4eug3deqdgl7jhskbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5t5KYyGWzl9mHE6OsRdWlyttnvhmXtnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441673372330-00j4stg0f3vq5q4eug3deqdgl7jhskbt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "441673372330-0orke66g89gt13ao7ina4dij443hktkq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.endeavour22"
+              }
             }
           ]
         }

@@ -3,10 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // SERVER URL
-const serverURL = 'http://protected-chamber-92948.herokuapp.com';
-//const serverURL = 'http://10.0.2.2:7000';
-//const serverURL = 'http://192.168.171.231:7000';
-//const serverURL = 'http://192.168.0.142:7000';
+const String serverURL = 'http://13.235.45.183:7000';
+const String razorpayApi = 'rzp_live_sFxvVilfPtmghi';
 
 // NEW COLORS
 const kPrimaryLight = Color(0xFF0493BA);

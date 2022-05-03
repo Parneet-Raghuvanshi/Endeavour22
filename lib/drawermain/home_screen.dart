@@ -12,6 +12,7 @@ import 'package:endeavour22/widgets/button.dart';
 import 'package:endeavour22/widgets/custom_loader.dart';
 import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:endeavour22/widgets/input_field.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gif_view/gif_view.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback openDrawer;
@@ -277,10 +279,83 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ),
             SizedBox(height: 16.h),
+            Container(
+              height: 1.w,
+              color: Colors.black12,
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    final db = FirebaseDatabase.instance
+                        .ref()
+                        .child('links')
+                        .child('pp');
+                    await db.once().then((value) {
+                      if (value.snapshot.value != null) {
+                        link(value.snapshot.value.toString(), context);
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Privacy Policy',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    final db = FirebaseDatabase.instance
+                        .ref()
+                        .child('links')
+                        .child('tos');
+                    await db.once().then((value) {
+                      if (value.snapshot.value != null) {
+                        link(value.snapshot.value.toString(), context);
+                      }
+                    });
+                  },
+                  child: Text(
+                    'TOS',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    final db = FirebaseDatabase.instance
+                        .ref()
+                        .child('links')
+                        .child('rp');
+                    await db.once().then((value) {
+                      if (value.snapshot.value != null) {
+                        link(value.snapshot.value.toString(), context);
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Refund Policy',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
           ],
         ),
       ),
     );
+  }
+
+  void link(String url, BuildContext context) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      showErrorFlush(
+        context: context,
+        message: 'Error loading URL, please try again!',
+      );
+    }
   }
 
   void submitContactUs() async {

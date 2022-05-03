@@ -106,9 +106,28 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         height: 34.h,
                         width: yourWidth,
                         child: Tab(
-                          child: Text(
-                            'Day One',
-                            style: TextStyle(fontSize: 16.sp),
+                          child: Wrap(
+                            direction: Axis.horizontal,
+                            children: [
+                              Text(
+                                '20',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                              Text(
+                                'th',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                              Text(
+                                ' May',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -116,9 +135,28 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         height: 34.h,
                         width: yourWidth,
                         child: Tab(
-                          child: Text(
-                            'Day Two',
-                            style: TextStyle(fontSize: 16.sp),
+                          child: Wrap(
+                            direction: Axis.horizontal,
+                            children: [
+                              Text(
+                                '21',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                              Text(
+                                'st',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                              Text(
+                                ' May',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
