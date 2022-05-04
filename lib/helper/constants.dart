@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // SERVER URL
-const String serverURL = 'http://13.235.45.183:7000';
+const String serverURL = 'https://endeavour-kiet.com';
 const String razorpayApi = 'rzp_live_sFxvVilfPtmghi';
 
 // NEW COLORS
