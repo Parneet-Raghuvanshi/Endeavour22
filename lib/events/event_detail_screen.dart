@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:endeavour22/auth/auth_provider.dart';
 import 'package:endeavour22/auth/profile_view.dart';
 import 'package:endeavour22/auth/user_model.dart';
@@ -16,6 +19,7 @@ import 'package:endeavour22/widgets/custom_snackbar.dart';
 import 'package:endeavour22/widgets/input_field.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -463,12 +467,14 @@ class _EventDetailState extends State<EventDetail> {
       'key': razorpayApi,
       'amount': amount,
       'order_id': orderId,
-      'name': name,
-      'description': desc,
+      'name': "Endeavour'22",
+      'description': widget.model.name,
       'prefill': {
+        'name': name,
         'contact': contact,
         'email': email,
-      }
+      },
+      'theme': {'color': '#00338e'}
     };
     try {
       _razorpay.open(options);
